@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message;
+package com.ubo.tp.message;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

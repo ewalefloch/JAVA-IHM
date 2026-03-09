@@ -10,6 +10,10 @@ import main.java.com.ubo.tp.message.datamodel.User;
  * @author S.Lucas
  */
 public class Constants {
+	 private Constants() {
+	  /* This utility class should not be instantiated */
+	 }
+
 	/**
 	 * Extension des fichiers de propriété des User
 	 */

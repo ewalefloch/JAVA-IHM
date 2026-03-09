@@ -1,19 +1,16 @@
 package main.java.com.ubo.tp.message.controller;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.stage.DirectoryChooser;
 import main.java.com.ubo.tp.message.core.DataManager;
 import main.java.com.ubo.tp.message.core.session.ISessionObserver;
 import main.java.com.ubo.tp.message.core.session.Session;
-import main.java.com.ubo.tp.message.datamodel.Message;
 import main.java.com.ubo.tp.message.datamodel.User;
 import main.java.com.ubo.tp.message.ihm.MainPanelViewFx;
 import main.java.com.ubo.tp.message.ihm.MessageAppMainViewFx;
 import main.java.com.ubo.tp.message.ihm.register.fx.AuthViewFx;
 
 import java.io.File;
-import java.util.Set;
 
 public class MessageAppFx implements ISessionObserver {
 

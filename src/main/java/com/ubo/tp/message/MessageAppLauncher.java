@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message;
+package com.ubo.tp.message;
 
 import main.java.com.ubo.tp.message.controller.MessageAppFx;
 import main.java.com.ubo.tp.message.core.DataManager;
