@@ -24,6 +24,15 @@ application {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    def fxVersion = "21.0.2"
+
+    runtimeOnly "org.openjfx:javafx-graphics:${fxVersion}:win"
+    runtimeOnly "org.openjfx:javafx-controls:${fxVersion}:win"
+    runtimeOnly "org.openjfx:javafx-fxml:${fxVersion}:win"
+
+    runtimeOnly "org.openjfx:javafx-graphics:${fxVersion}:linux"
+    runtimeOnly "org.openjfx:javafx-controls:${fxVersion}:linux"
+    runtimeOnly "org.openjfx:javafx-fxml:${fxVersion}:linux"
 }
 
 sonar {
