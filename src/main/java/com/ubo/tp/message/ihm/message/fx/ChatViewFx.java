@@ -16,25 +16,25 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
     private MessageListViewFx messageListView;
     private TextField inputField;
 
-    public ChatViewFx(MessageListController controller) {
+    public ChatViewFx(MessageListController controller,MessageListViewFx messageListView) {
         this.controller = controller;
+        this.messageListView = messageListView;
         this.initComponents();
         this.controller.addObserver(this);
     }
 
     private void initComponents() {
-        // La liste des messages (Centre)
-        messageListView = new MessageListViewFx();
+        // liste des messages (Centre)
         this.setCenter(messageListView);
 
-        // La barre de saisie (Bas)
+        // barre de saisie (Bas)
         HBox inputPanel = new HBox(10); // Espacement de 10px entre les éléments
         inputPanel.setPadding(new Insets(10));
         inputPanel.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1 0 0 0;");
 
         inputField = new TextField();
         inputField.setPromptText("Écrivez votre message...");
-        // On fait en sorte que le champ de texte prenne tout l'espace horizontal
+
         HBox.setHgrow(inputField, Priority.ALWAYS);
 
         Button sendButton = new Button("Envoyer");
@@ -43,7 +43,7 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
 
         // Actions
         sendButton.setOnAction(e -> send());
-        inputField.setOnAction(e -> send()); // Touche Entrée
+        inputField.setOnAction(e -> send());
 
         inputPanel.getChildren().addAll(inputField, sendButton);
 
@@ -60,7 +60,6 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
 
     @Override
     public void onMessageListChanged() {
-        // Toujours Platform.runLater pour les notifications venant du controller
         Platform.runLater(() -> messageListView.refresh(controller.getMessages()));
     }
 }

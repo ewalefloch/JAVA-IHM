@@ -1,6 +1,7 @@
 package com.ubo.tp.message.controller;
 
 import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
+import com.ubo.tp.message.controller.observer.IMessageActionObserver;
 import com.ubo.tp.message.controller.observer.IMessageListObserver;
 import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.database.IDatabaseObserver;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class MessageListController implements IDatabaseObserver, IChannelSelectionObserver {
+public class MessageListController implements IDatabaseObserver, IChannelSelectionObserver, IMessageActionObserver {
 
     private final DataManager dataManager;
     private final ISession session;
@@ -103,15 +104,25 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
 
     // ignore
     @Override
-    public void notifyUserAdded(User addedUser) {}
+    public void notifyUserAdded(User addedUser) {/* IGNORE */}
     @Override
-    public void notifyUserDeleted(User deletedUser) {}
+    public void notifyUserDeleted(User deletedUser) {/* IGNORE */}
     @Override
-    public void notifyUserModified(User modifiedUser) {}
+    public void notifyUserModified(User modifiedUser) {/* IGNORE */}
     @Override
-    public void notifyChannelAdded(Channel addedChannel) {}
+    public void notifyChannelAdded(Channel addedChannel) {/* IGNORE */}
     @Override
-    public void notifyChannelDeleted(Channel deletedChannel) {}
+    public void notifyChannelDeleted(Channel deletedChannel) {/* IGNORE */}
     @Override
-    public void notifyChannelModified(Channel modifiedChannel) {}
+    public void notifyChannelModified(Channel modifiedChannel) { /* IGNORE */ }
+
+    @Override
+    public void onDeleteRequested(Message message) {
+        dataManager.deleteMessage(message);
+    }
+
+    @Override
+    public boolean isMyMessage(Message message) {
+        return session.getConnectedUser().getUuid().equals(message.getSender().getUuid());
+    }
 }

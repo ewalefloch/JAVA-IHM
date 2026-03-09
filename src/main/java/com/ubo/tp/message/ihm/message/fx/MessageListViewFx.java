@@ -1,20 +1,36 @@
 package com.ubo.tp.message.ihm.message.fx;
 
+import com.ubo.tp.message.controller.observer.IMessageActionObserver;
 import javafx.scene.layout.BorderPane;
 import com.ubo.tp.message.datamodel.Message;
 import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageListViewFx extends AbstractListViewFx<Message> {
+
+    private final List<IMessageActionObserver> observers = new ArrayList<>();
 
     public MessageListViewFx() {
         super("Discussion");
     }
 
+    public void addObserver(IMessageActionObserver observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
     @Override
     protected BorderPane createCell(Message item) {
-        return new MessageCellViewFx(item);
+        boolean isMe = observers.stream().anyMatch(obs -> obs.isMyMessage(item));
+
+        return new MessageCellViewFx(item, isMe, () -> {
+            for (IMessageActionObserver obs : observers) {
+                obs.onDeleteRequested(item);
+            }
+        });
     }
 
     @Override
@@ -24,7 +40,6 @@ public class MessageListViewFx extends AbstractListViewFx<Message> {
 
     @Override
     protected int getCellHeight() {
-        // On laisse une hauteur flexible ou assez grande pour le texte
         return 80;
     }
 

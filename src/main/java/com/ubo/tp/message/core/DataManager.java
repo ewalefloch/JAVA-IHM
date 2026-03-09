@@ -221,4 +221,8 @@ public class DataManager {
 	public void deleteChannel(Channel channel) {
 		this.mEntityManager.deleteChannelFile(channel);
 	}
+
+	public void deleteMessage(Message message){
+		mEntityManager.deleteMessageFile(message);
+	}
 }

@@ -8,6 +8,7 @@ import com.ubo.tp.message.ihm.channel.ChannelListView;
 import com.ubo.tp.message.ihm.channel.fx.ChannelListViewFx;
 import com.ubo.tp.message.ihm.message.ChatView;
 import com.ubo.tp.message.ihm.message.fx.ChatViewFx;
+import com.ubo.tp.message.ihm.message.fx.MessageListViewFx;
 import com.ubo.tp.message.ihm.user.UserListView;
 import com.ubo.tp.message.ihm.user.fx.UserListViewFx;
 
@@ -23,6 +24,7 @@ public class MainPanelControllerFx {
     private final ChannelListViewFx channelListView;
     private final UserListViewFx userListView;
     private final ChatViewFx chatView;
+    private final MessageListViewFx messageListView;
 
     public MainPanelControllerFx(DataManager dataManager, ISession session) {
         this.dataManager = dataManager;
@@ -36,8 +38,11 @@ public class MainPanelControllerFx {
 
         this.channelListController.addSelectionObserver(this.messageListController);
         this.channelListController.addSelectionObserver(this.userListController);
+        this.messageListView = new MessageListViewFx();
 
-        this.chatView = new ChatViewFx(messageListController);
+        this.chatView = new ChatViewFx(messageListController,messageListView);
+        messageListView.addObserver(messageListController);
+        
         this.channelListView = new ChannelListViewFx(channelListController);
         this.userListView = new UserListViewFx(userListController);
 
