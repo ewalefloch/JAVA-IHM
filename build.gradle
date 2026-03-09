@@ -28,8 +28,8 @@ dependencies {
 
 sonar {
     properties {
-        property("sonar.projectKey", "JAVA-IHM")
-        property("sonar.projectName", "JAVA-IHM")
+        property("sonar.projectKey", "ewalefloch_JAVA-IHM")
+        property("sonar.projectName", "ewalefloch_JAVA-IHM")
     }
 }
 
