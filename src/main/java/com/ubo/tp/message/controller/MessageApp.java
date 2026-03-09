@@ -11,6 +11,8 @@ import com.ubo.tp.message.datamodel.User;
 import com.ubo.tp.message.ihm.MainPanelView;
 import com.ubo.tp.message.ihm.register.AuthView;
 import com.ubo.tp.message.ihm.MessageAppMainView;
+import com.ubo.tp.message.ihm.register.LoginForm;
+import com.ubo.tp.message.ihm.register.RegisterForm;
 
 import javax.swing.*;
 
@@ -59,8 +61,11 @@ public class MessageApp implements ISessionObserver {
 
 	protected void initViews() {
 		this.loginController = new LoginController(mDataManager, session);
-
-		this.mAuthView = new AuthView(loginController);
+		LoginForm loginForm = new LoginForm(loginController);
+		RegisterForm registerForm = new RegisterForm(loginController);
+		this.mAuthView = new AuthView(loginForm,registerForm);
+		loginForm.setParentView(mAuthView);
+		registerForm.setParentView(mAuthView);
 	}
 
 	protected void initDirectory() {

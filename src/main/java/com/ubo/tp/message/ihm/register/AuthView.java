@@ -10,7 +10,7 @@ public class AuthView extends JPanel {
     private final CardLayout cardLayout;
     private final JPanel container;
 
-    public AuthView(LoginController controller) {
+    public AuthView(LoginForm login, RegisterForm registerForm) {
         this.cardLayout = new CardLayout();
         this.container = new JPanel(cardLayout);
 
@@ -18,8 +18,8 @@ public class AuthView extends JPanel {
         this.add(container, BorderLayout.CENTER);
 
         // Ajout des deux vues
-        container.add(new LoginForm(controller, this), "LOGIN");
-        container.add(new RegisterForm(controller, this), "REGISTER");
+        container.add(registerForm);
+        container.add(login);
 
         // login par défaut
         showLogin();

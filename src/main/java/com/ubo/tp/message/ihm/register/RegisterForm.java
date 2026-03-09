@@ -8,15 +8,15 @@ import java.awt.*;
 
 public class RegisterForm extends JPanel {
     private final LoginController controller;
-    private final AuthView parentView;
+    private AuthView parentView;
 
-    private JTextField tagField, nameField;
+    private JTextField tagField;
+    private JTextField nameField;
     private JPasswordField passField;
     private JLabel infoLabel;
 
-    public RegisterForm(LoginController controller, AuthView parentView) {
+    public RegisterForm(LoginController controller) {
         this.controller = controller;
-        this.parentView = parentView;
         this.setLayout(new GridBagLayout());
         initGui();
     }
@@ -100,5 +100,9 @@ public class RegisterForm extends JPanel {
             infoLabel.setForeground(Color.RED);
             infoLabel.setText(result.getMessage());
         }
+    }
+
+    public void setParentView(AuthView authView){
+        this.parentView = authView;
     }
 }

@@ -1,8 +1,6 @@
 package com.ubo.tp.message.ihm.channel.fx;
 
 import com.ubo.tp.message.controller.observer.IChannelActionObserver;
-import com.ubo.tp.message.controller.observer.IMessageActionObserver;
-import com.ubo.tp.message.ihm.message.fx.MessageCellViewFx;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -14,7 +12,6 @@ import com.ubo.tp.message.datamodel.Channel;
 import com.ubo.tp.message.datamodel.User;
 import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,13 +51,23 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
 
     @Override
     protected BorderPane createCell(Channel item) {
-
-
-        return new ChannelCellViewFx(item, controller.isMyChannel(item), () -> {
+        ChannelCellViewFx cell = new ChannelCellViewFx(item, controller.isMyChannel(item), () -> {
             for (IChannelActionObserver obs : observersActionChannel) {
                 obs.onDeleteRequested(item);
             }
         },controller.isChannelPrivate(item));
+
+        cell.setOnMouseClicked(e -> {
+            if (selectedChannelCell != null) {
+                selectedChannelCell.setSelected(false);
+            }
+            selectedChannelCell = cell;
+            cell.setSelected(true);
+
+            controller.selectChannel(item);
+        });
+
+        return cell;
     }
 
     @Override

@@ -8,15 +8,14 @@ import java.awt.*;
 
 public class LoginForm extends JPanel {
     private final LoginController controller;
-    private final AuthView parentView;
+    private  AuthView parentView;
 
     private JTextField tagField;
     private JPasswordField passField;
     private JLabel errorLabel;
 
-    public LoginForm(LoginController controller, AuthView parentView) {
+    public LoginForm(LoginController controller) {
         this.controller = controller;
-        this.parentView = parentView;
         this.setLayout(new GridBagLayout());
         initGui();
     }
@@ -83,5 +82,9 @@ public class LoginForm extends JPanel {
         } else {
             errorLabel.setText("");
         }
+    }
+
+    public void setParentView(AuthView authView){
+        parentView = authView;
     }
 }
