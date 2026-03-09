@@ -1,9 +1,6 @@
 package com.ubo.tp.message.controller;
 
-import com.ubo.tp.message.controller.observer.IChannelActionObserver;
-import com.ubo.tp.message.controller.observer.IChannelListObserver;
-import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
-import com.ubo.tp.message.controller.observer.IRemoveUserChannelObserver;
+import com.ubo.tp.message.controller.observer.*;
 import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.database.IDatabaseObserver;
 import com.ubo.tp.message.core.session.ISession;
@@ -15,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ChannelListController implements IDatabaseObserver, IChannelActionObserver {
+public class ChannelListController implements IDatabaseObserver, IChannelActionObserver, IUserActionObserver {
 
     private final DataManager dataManager;
     private final ISession session;

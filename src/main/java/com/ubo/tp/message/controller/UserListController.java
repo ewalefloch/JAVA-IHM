@@ -12,6 +12,7 @@ import com.ubo.tp.message.datamodel.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -102,6 +103,50 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
         }
     }
 
+    public boolean canManageCurrentChannel() {
+        if (currentChannel == null || !currentChannel.ismPrivate()) {
+            return false;
+        }
+        return currentChannel.getCreator().getUuid().equals(getConnectedUser().getUuid());
+    }
+
+    public List<User> getUsersNotInCurrentChannel() {
+        if (currentChannel == null) return new ArrayList<>();
+        List<UUID> memberIds = currentChannel.getUsers().stream().map(User::getUuid).toList();
+        return dataManager.getUsers().stream()
+                .filter(u -> !memberIds.contains(u.getUuid()) && !u.getUuid().equals(currentChannel.getCreator().getUuid()))
+                .toList();
+    }
+
+    public List<User> getUsersInCurrentChannel() {
+        if (currentChannel == null) return new ArrayList<>();
+        return currentChannel.getUsers().stream()
+                .filter(u -> !u.getUuid().equals(currentChannel.getCreator().getUuid()))
+                .toList();
+    }
+
+    public void addUsersToChannel(List<User> users) {
+        if (canManageCurrentChannel()) {
+            for (User u : users) {
+                currentChannel.addUser(u);
+            }
+            dataManager.sendChannel(currentChannel);
+            notifyObservers();
+        }
+    }
+
+    public void removeUsersFromChannel(List<User> users) {
+        if (canManageCurrentChannel()) {
+            for (User u : users) {
+                currentChannel.removeUser(u);
+            }
+            dataManager.sendChannel(currentChannel);
+            notifyObservers();
+            notifyRemoveUser();
+        }
+    }
+
+
     @Override
     public void onChannelSelected(Channel channel) {
         this.currentChannel = channel;
@@ -110,15 +155,19 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
 
     @Override
     public void notifyMessageAdded(Message addedMessage) {
+        //Ignore
     }
 
     @Override
     public void notifyMessageDeleted(Message deletedMessage) {
+        //Ignore
     }
 
     @Override
     public void notifyMessageModified(Message modifiedMessage) {
+        //Ignore
     }
+
 
     @Override
     public void notifyUserAdded(User addedUser) {
@@ -137,13 +186,16 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
 
     @Override
     public void notifyChannelAdded(Channel addedChannel) {
+        //Ignore
     }
 
     @Override
     public void notifyChannelDeleted(Channel deletedChannel) {
+        //Ignore
     }
 
     @Override
     public void notifyChannelModified(Channel modifiedChannel) {
+        //Ignore
     }
 }

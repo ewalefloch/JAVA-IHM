@@ -125,4 +125,19 @@ public class Channel extends AbstractMessageAppObject implements IMessageRecipie
 		return sb.toString();
 	}
 
+	public void addUser(User user) {
+		if (mPrivate && user != null) {
+			mUsers.add(user);
+		}
+	}
+
+	public void removeUser(User user) {
+		if (mPrivate && user != null) {
+			// Sécurité : on empêche la suppression du créateur
+			if (!user.getUuid().equals(mCreator.getUuid())) {
+				mUsers.removeIf(u -> u.getUuid().equals(user.getUuid()));
+			}
+		}
+	}
+
 }

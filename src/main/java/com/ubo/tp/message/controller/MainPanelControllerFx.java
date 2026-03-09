@@ -4,12 +4,9 @@ import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.session.ISession;
 import com.ubo.tp.message.datamodel.Channel;
 import com.ubo.tp.message.datamodel.User;
-import com.ubo.tp.message.ihm.channel.ChannelListView;
 import com.ubo.tp.message.ihm.channel.fx.ChannelListViewFx;
-import com.ubo.tp.message.ihm.message.ChatView;
 import com.ubo.tp.message.ihm.message.fx.ChatViewFx;
 import com.ubo.tp.message.ihm.message.fx.MessageListViewFx;
-import com.ubo.tp.message.ihm.user.UserListView;
 import com.ubo.tp.message.ihm.user.fx.UserListViewFx;
 
 import java.util.Set;
@@ -17,30 +14,27 @@ import java.util.Set;
 public class MainPanelControllerFx {
     private final DataManager dataManager;
     private final ISession session;
-    private final ChannelListController channelListController;
-    private final UserListController userListController;
     private final MessageListController messageListController;
 
     private final ChannelListViewFx channelListView;
     private final UserListViewFx userListView;
     private final ChatViewFx chatView;
-    private final MessageListViewFx messageListView;
     private static final String ADMIN ="admin";
     public MainPanelControllerFx(DataManager dataManager, ISession session) {
         this.dataManager = dataManager;
         this.session = session;
 
         this.messageListController = new MessageListController(dataManager, session);
-        this.channelListController = new ChannelListController(dataManager, session);
-        this.userListController = new UserListController(dataManager,session);
+        ChannelListController channelListController = new ChannelListController(dataManager, session);
+        UserListController userListController = new UserListController(dataManager, session);
 
         initDefaultChannel();
 
-        this.channelListController.addSelectionObserver(this.messageListController);
-        this.channelListController.addSelectionObserver(this.userListController);
-        this.messageListView = new MessageListViewFx();
+        channelListController.addSelectionObserver(this.messageListController);
+        channelListController.addSelectionObserver(userListController);
+        MessageListViewFx messageListView = new MessageListViewFx();
 
-        this.chatView = new ChatViewFx(messageListController,messageListView);
+        this.chatView = new ChatViewFx(messageListController, messageListView);
         messageListView.addObserver(messageListController);
 
         this.channelListView = new ChannelListViewFx(channelListController);
@@ -52,7 +46,7 @@ public class MainPanelControllerFx {
 
         if (channels == null || channels.isEmpty() ) {
             Set<User> users  = dataManager.getUsers();
-            User user = null;
+            User user;
             if (users == null || users.isEmpty()){
                 user = new User(ADMIN, ADMIN,ADMIN);
                 dataManager.sendUser(user);

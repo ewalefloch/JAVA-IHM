@@ -24,11 +24,11 @@ public class UserCellViewFx extends AbstractCellViewFx<User> {
 
     @Override
     protected void buildContent() {
-        // Indicateur de statut (pastille ronde en JavaFX)
+        // Indicateur de statut
         statusIndicator = new Circle(6); // Rayon de 6px
         updateStatusIndicator();
 
-        // Panel pour les informations utilisateur
+        // Panel
         VBox infoPanel = new VBox(3); // 3px d'espacement vertical
         infoPanel.setAlignment(Pos.CENTER_LEFT);
 
@@ -41,13 +41,11 @@ public class UserCellViewFx extends AbstractCellViewFx<User> {
 
         infoPanel.getChildren().addAll(nameLabel, tagLabel);
 
-        // Placement dans le BorderPane (hérité de AbstractCellViewFx)
         this.setLeft(statusIndicator);
         this.setCenter(infoPanel);
 
-        // Centrer verticalement la pastille
+        // Centrer verticalement
         BorderPane.setAlignment(statusIndicator, Pos.CENTER);
-        // Ajouter un peu de marge entre la pastille et le texte
         BorderPane.setMargin(statusIndicator, new javafx.geometry.Insets(0, 10, 0, 0));
     }
 
