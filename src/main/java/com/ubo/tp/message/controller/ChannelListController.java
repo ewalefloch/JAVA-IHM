@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ChannelListController implements IDatabaseObserver, IChannelActionObserver, IUserActionObserver {
+public class ChannelListController implements IDatabaseObserver, IChannelActionObserver {
 
     private final DataManager dataManager;
     private final ISession session;
@@ -36,7 +36,6 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
 
     public void deleteChannel(Channel channel) {
         dataManager.deleteChannel(channel);
-        notifyObservers();
     }
 
     public boolean isChannelPrivate(Channel channel) {
@@ -62,7 +61,6 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
         }
 
         dataManager.sendChannel(newChannel);
-        notifyObservers();
 
         return null;
     }
@@ -146,7 +144,6 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
         dataManager.deleteChannel(channel);
     }
 
-    @Override
     public boolean isMyChannel(Channel channel) {
         return channel.getCreator().getUuid().equals(session.getConnectedUser().getUuid());
     }

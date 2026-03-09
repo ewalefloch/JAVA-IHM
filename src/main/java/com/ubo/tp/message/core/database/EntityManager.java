@@ -98,7 +98,26 @@ public class EntityManager implements IWatchableDirectoryObserver {
 	}
 
 	public void deleteChannelFile(Channel channel) {
-		mDatabase.deleteChannel(channel);
+		if (mDirectoryPath != null) {
+			// On cherche le nom du fichier associé à cet utilisateur grâce à la map
+			String fileNameToDelete = null;
+			for (Map.Entry<String, Channel> entry : mChannelFileMap.entrySet()) {
+				if (entry.getValue().getUuid().equals(channel.getUuid())) {
+					fileNameToDelete = entry.getKey();
+					break;
+				}
+			}
+
+			// Si on a trouvé le fichier, on le supprime physiquement
+			if (fileNameToDelete != null) {
+				File fileToDelete = new File(mDirectoryPath + File.separator + fileNameToDelete);
+				if (fileToDelete.exists()) {
+					fileToDelete.delete();
+				}
+			}
+		} else {
+			throw new RuntimeException("Le répertoire d'échange n'est pas configuré !");
+		}
 	}
 
 	/**
@@ -493,6 +512,25 @@ public class EntityManager implements IWatchableDirectoryObserver {
 	}
 
     public void deleteMessageFile(Message message) {
-		mDatabase.deleteMessage(message);
+		if (mDirectoryPath != null) {
+			String fileNameToDelete = null;
+			for (Map.Entry<String, Message> entry : mMessageFileMap.entrySet()) {
+				if (entry.getValue().getUuid().equals(message.getUuid())) {
+					fileNameToDelete = entry.getKey();
+					break;
+				}
+			}
+
+			if (fileNameToDelete != null) {
+				File fileToDelete = new File(mDirectoryPath + File.separator + fileNameToDelete);
+				if (fileToDelete.exists()) {
+					fileToDelete.delete();
+				}
+			}
+		} else {
+			throw new RuntimeException("Le répertoire d'échange n'est pas configuré !");
+		}
+
 	}
+
 }

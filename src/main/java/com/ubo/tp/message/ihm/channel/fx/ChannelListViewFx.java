@@ -19,7 +19,6 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
 
     private final ChannelListController controller;
     private ChannelCellViewFx selectedChannelCell;
-    private List<IChannelActionObserver> observersActionChannel = new ArrayList<>();
 
 
     public ChannelListViewFx(ChannelListController controller) {
@@ -52,9 +51,7 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
     @Override
     protected BorderPane createCell(Channel item) {
         ChannelCellViewFx cell = new ChannelCellViewFx(item, controller.isMyChannel(item), () -> {
-            for (IChannelActionObserver obs : observersActionChannel) {
-                obs.onDeleteRequested(item);
-            }
+                controller.deleteChannel(item);
         },controller.isChannelPrivate(item));
 
         cell.setOnMouseClicked(e -> {
@@ -167,11 +164,5 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
         });
 
         dialog.showAndWait();
-    }
-
-    public void addObserver(IChannelActionObserver observer) {
-        if (!observersActionChannel.contains(observer)) {
-            observersActionChannel.add(observer);
-        }
     }
 }

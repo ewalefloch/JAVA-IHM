@@ -39,7 +39,6 @@ public class MainPanelControllerFx {
 
         this.channelListView = new ChannelListViewFx(channelListController);
         this.userListView = new UserListViewFx(userListController);
-        channelListView.addObserver(channelListController);
     }
     private void initDefaultChannel() {
         Set<Channel> channels = dataManager.getChannels(session.getConnectedUser());
