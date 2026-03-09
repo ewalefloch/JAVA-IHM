@@ -100,26 +100,32 @@ public class ChannelListController implements IDatabaseObserver, IRemoveUserChan
 
     @Override
     public void notifyMessageAdded(Message addedMessage) {
+        // IGNORE
     }
 
     @Override
     public void notifyMessageDeleted(Message deletedMessage) {
+        //IGNORE
     }
 
     @Override
     public void notifyMessageModified(Message modifiedMessage) {
+        //IGNORE
     }
 
     @Override
     public void notifyUserAdded(User addedUser) {
+        //IGNORE
     }
 
     @Override
     public void notifyUserDeleted(User deletedUser) {
+        //IGNORE
     }
 
     @Override
     public void notifyUserModified(User modifiedUser) {
+        //IGNORE
     }
 
     @Override

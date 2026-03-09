@@ -10,7 +10,7 @@ public abstract class AbstractCellView<T> extends JPanel {
     protected final T item;
     protected boolean selected = false;
 
-    public AbstractCellView(T item) {
+    protected AbstractCellView(T item) {
         this.item = item;
         initBaseComponents();
     }

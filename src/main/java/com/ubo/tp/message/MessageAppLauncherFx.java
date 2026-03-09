@@ -6,28 +6,22 @@ import com.ubo.tp.message.controller.MessageAppFx;
 import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.database.ConsoleDatabase;
 import com.ubo.tp.message.core.database.Database;
-import com.ubo.tp.message.core.database.DbConnector;
 import com.ubo.tp.message.core.database.EntityManager;
 
 public class MessageAppLauncherFx extends Application {
 
-	protected static boolean IS_MOCK_ENABLED = false;
+	protected static final boolean IS_MOCK_ENABLED = false;
 
 	public static void main(String[] args) {
-		// La méthode main ne fait plus RIEN d'autre que lancer JavaFX.
-		// Cela va initialiser le Toolkit et appeler la méthode start() ci-dessous.
 		Application.launch(MessageAppLauncherFx.class, args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) {
-		// --- À partir d'ici, nous sommes sur le bon thread (JavaFX Thread) ! ---
-		// On peut donc créer nos données et instancier nos fenêtres Fx sans erreur.
-
 		Database database = new Database();
 		EntityManager entityManager = new EntityManager(database);
 		DataManager dataManager = new DataManager(database, entityManager);
-		DbConnector dbConnector = new DbConnector(database);
+
 		ConsoleDatabase consoleDatabase = new ConsoleDatabase();
 
 		dataManager.addObserver(consoleDatabase);

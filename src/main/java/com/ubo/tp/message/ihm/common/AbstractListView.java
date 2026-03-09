@@ -91,7 +91,7 @@ public abstract class AbstractListView<T> extends JPanel {
             if (!query.isEmpty()) {
                 filteredItems = allItems.stream()
                         .filter(item -> matchSearch(item, query))
-                        .collect(Collectors.toList());
+                        .toList();
             }
 
             if (filteredItems.isEmpty()) {

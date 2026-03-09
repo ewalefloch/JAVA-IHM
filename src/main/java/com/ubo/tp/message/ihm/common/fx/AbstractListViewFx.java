@@ -13,7 +13,6 @@ import javafx.scene.text.FontWeight;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class AbstractListViewFx<T> extends BorderPane {
 
@@ -21,7 +20,7 @@ public abstract class AbstractListViewFx<T> extends BorderPane {
     private TextField searchField;
     private List<T> allItems;
 
-    public AbstractListViewFx(String title) {
+    protected AbstractListViewFx(String title) {
         this.allItems = new ArrayList<>();
         initComponents(title);
     }
@@ -74,7 +73,7 @@ public abstract class AbstractListViewFx<T> extends BorderPane {
             if (!query.isEmpty()) {
                 filteredItems = allItems.stream()
                         .filter(item -> matchSearch(item, query))
-                        .collect(Collectors.toList());
+                        .toList();
             }
 
             if (filteredItems.isEmpty()) {

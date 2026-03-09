@@ -9,7 +9,7 @@ public abstract class AbstractCellViewFx<T> extends BorderPane {
     protected final T item;
     protected boolean selected = false;
 
-    public AbstractCellViewFx(T item) {
+    protected AbstractCellViewFx(T item) {
         this.item = item;
         initBaseComponents();
     }
