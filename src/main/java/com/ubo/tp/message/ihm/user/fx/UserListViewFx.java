@@ -1,11 +1,11 @@
-package main.java.com.ubo.tp.message.ihm.user.fx;
+package com.ubo.tp.message.ihm.user.fx;
 
 import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
-import main.java.com.ubo.tp.message.controller.UserListController;
-import main.java.com.ubo.tp.message.controller.observer.IUserListObserver;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
+import com.ubo.tp.message.controller.UserListController;
+import com.ubo.tp.message.controller.observer.IUserListObserver;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
 import java.util.List;
 

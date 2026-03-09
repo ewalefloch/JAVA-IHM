@@ -1,8 +1,8 @@
-package main.java.com.ubo.tp.message.ihm.message.fx;
+package com.ubo.tp.message.ihm.message.fx;
 
 import javafx.scene.layout.BorderPane;
-import main.java.com.ubo.tp.message.datamodel.Message;
-import main.java.com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
+import com.ubo.tp.message.datamodel.Message;
+import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.common.fx;
+package com.ubo.tp.message.ihm.common.fx;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

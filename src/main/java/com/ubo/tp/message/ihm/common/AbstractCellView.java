@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.common;
+package com.ubo.tp.message.ihm.common;
 
 import javax.swing.*;
 import java.awt.*;

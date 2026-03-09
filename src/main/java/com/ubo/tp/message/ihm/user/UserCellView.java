@@ -1,7 +1,7 @@
-package main.java.com.ubo.tp.message.ihm.user;
+package com.ubo.tp.message.ihm.user;
 
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.common.AbstractCellView;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.common.AbstractCellView;
 
 import javax.swing.*;
 import java.awt.*;

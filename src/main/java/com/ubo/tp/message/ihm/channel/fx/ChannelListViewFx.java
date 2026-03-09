@@ -1,15 +1,15 @@
-package main.java.com.ubo.tp.message.ihm.channel.fx;
+package com.ubo.tp.message.ihm.channel.fx;
 
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import main.java.com.ubo.tp.message.controller.ChannelListController;
-import main.java.com.ubo.tp.message.controller.observer.IChannelListObserver;
-import main.java.com.ubo.tp.message.datamodel.Channel;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
+import com.ubo.tp.message.controller.ChannelListController;
+import com.ubo.tp.message.controller.observer.IChannelListObserver;
+import com.ubo.tp.message.datamodel.Channel;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
 import javax.swing.*;
 import java.util.List;

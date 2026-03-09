@@ -1,31 +1,35 @@
 plugins {
-    id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id("java")
+    id("application")
+    id("org.openjfx.javafxplugin") version "0.0.13"
+    id("org.sonarqube") version "7.1.0.6387"
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group = "com"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
 javafx {
-    version = "17.0.6"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    version = "21.0.2"
+    modules("javafx.controls", "javafx.fxml")
 }
 
 application {
-    mainClassName = 'com.ubo.tp.message.MessageAppLauncherFx'
+    mainClass.set("com.ubo.tp.message.MessageAppLauncherFx")
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
+
+sonar {
+    properties {
+        property("sonar.projectKey", "JAVA-IHM")
+        property("sonar.projectName", "JAVA-IHM")
+    }
+}
+

@@ -1,9 +1,9 @@
-package main.java.com.ubo.tp.message.ihm.channel;
+package com.ubo.tp.message.ihm.channel;
 
-import main.java.com.ubo.tp.message.controller.ChannelListController;
-import main.java.com.ubo.tp.message.controller.observer.IChannelListObserver;
-import main.java.com.ubo.tp.message.datamodel.Channel;
-import main.java.com.ubo.tp.message.ihm.common.AbstractListView;
+import com.ubo.tp.message.controller.ChannelListController;
+import com.ubo.tp.message.controller.observer.IChannelListObserver;
+import com.ubo.tp.message.datamodel.Channel;
+import com.ubo.tp.message.ihm.common.AbstractListView;
 
 import javax.swing.*;
 

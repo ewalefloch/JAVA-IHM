@@ -1,13 +1,13 @@
-package main.java.com.ubo.tp.message.controller;
+package com.ubo.tp.message.controller;
 
-import main.java.com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
-import main.java.com.ubo.tp.message.controller.observer.IMessageListObserver;
-import main.java.com.ubo.tp.message.core.DataManager;
-import main.java.com.ubo.tp.message.core.database.IDatabaseObserver;
-import main.java.com.ubo.tp.message.core.session.ISession;
-import main.java.com.ubo.tp.message.datamodel.Channel;
-import main.java.com.ubo.tp.message.datamodel.Message;
-import main.java.com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
+import com.ubo.tp.message.controller.observer.IMessageListObserver;
+import com.ubo.tp.message.core.DataManager;
+import com.ubo.tp.message.core.database.IDatabaseObserver;
+import com.ubo.tp.message.core.session.ISession;
+import com.ubo.tp.message.datamodel.Channel;
+import com.ubo.tp.message.datamodel.Message;
+import com.ubo.tp.message.datamodel.User;
 
 import java.util.ArrayList;
 import java.util.Comparator;

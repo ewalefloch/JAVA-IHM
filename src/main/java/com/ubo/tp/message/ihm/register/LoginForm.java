@@ -1,7 +1,7 @@
-package main.java.com.ubo.tp.message.ihm.register;
+package com.ubo.tp.message.ihm.register;
 
-import main.java.com.ubo.tp.message.controller.LoginController;
-import main.java.com.ubo.tp.message.datamodel.AuthResult;
+import com.ubo.tp.message.controller.LoginController;
+import com.ubo.tp.message.datamodel.AuthResult;
 
 import javax.swing.*;
 import java.awt.*;

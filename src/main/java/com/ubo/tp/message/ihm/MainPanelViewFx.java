@@ -1,11 +1,11 @@
-package main.java.com.ubo.tp.message.ihm;
+package com.ubo.tp.message.ihm;
 
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import main.java.com.ubo.tp.message.controller.MainPanelControllerFx;
-import main.java.com.ubo.tp.message.ihm.channel.fx.ChannelListViewFx;
-import main.java.com.ubo.tp.message.ihm.message.fx.ChatViewFx;
-import main.java.com.ubo.tp.message.ihm.user.fx.UserListViewFx;
+import com.ubo.tp.message.controller.MainPanelControllerFx;
+import com.ubo.tp.message.ihm.channel.fx.ChannelListViewFx;
+import com.ubo.tp.message.ihm.message.fx.ChatViewFx;
+import com.ubo.tp.message.ihm.user.fx.UserListViewFx;
 
 public class MainPanelViewFx extends BorderPane {
 

@@ -1,10 +1,10 @@
-package main.java.com.ubo.tp.message.controller;
+package com.ubo.tp.message.controller;
 
 import javafx.application.Platform;
-import main.java.com.ubo.tp.message.core.DataManager;
-import main.java.com.ubo.tp.message.core.session.ISession;
-import main.java.com.ubo.tp.message.datamodel.Message;
-import main.java.com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.core.DataManager;
+import com.ubo.tp.message.core.session.ISession;
+import com.ubo.tp.message.datamodel.Message;
+import com.ubo.tp.message.datamodel.User;
 
 import java.util.Set;
 

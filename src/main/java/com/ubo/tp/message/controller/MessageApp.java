@@ -1,16 +1,16 @@
-package main.java.com.ubo.tp.message.controller;
+package com.ubo.tp.message.controller;
 
 import java.io.File;
 import java.util.Set;
 
-import main.java.com.ubo.tp.message.core.DataManager;
-import main.java.com.ubo.tp.message.core.session.ISessionObserver;
-import main.java.com.ubo.tp.message.core.session.Session;
-import main.java.com.ubo.tp.message.datamodel.Message;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.MainPanelView;
-import main.java.com.ubo.tp.message.ihm.register.AuthView;
-import main.java.com.ubo.tp.message.ihm.MessageAppMainView;
+import com.ubo.tp.message.core.DataManager;
+import com.ubo.tp.message.core.session.ISessionObserver;
+import com.ubo.tp.message.core.session.Session;
+import com.ubo.tp.message.datamodel.Message;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.MainPanelView;
+import com.ubo.tp.message.ihm.register.AuthView;
+import com.ubo.tp.message.ihm.MessageAppMainView;
 
 import javax.swing.*;
 

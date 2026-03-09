@@ -1,7 +1,7 @@
-package main.java.com.ubo.tp.message.ihm.register.fx;
+package com.ubo.tp.message.ihm.register.fx;
 
 import javafx.scene.layout.BorderPane;
-import main.java.com.ubo.tp.message.controller.LoginController;
+import com.ubo.tp.message.controller.LoginController;
 
 public class AuthViewFx extends BorderPane {
 

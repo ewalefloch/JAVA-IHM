@@ -1,12 +1,12 @@
-package main.java.com.ubo.tp.message.ihm.message.fx;
+package com.ubo.tp.message.ihm.message.fx;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import main.java.com.ubo.tp.message.datamodel.Message;
-import main.java.com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
+import com.ubo.tp.message.datamodel.Message;
+import com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
 
 public class MessageCellViewFx extends AbstractCellViewFx<Message> {
 

@@ -1,14 +1,14 @@
-package main.java.com.ubo.tp.message.controller;
+package com.ubo.tp.message.controller;
 
 import javafx.scene.control.Alert;
 import javafx.stage.DirectoryChooser;
-import main.java.com.ubo.tp.message.core.DataManager;
-import main.java.com.ubo.tp.message.core.session.ISessionObserver;
-import main.java.com.ubo.tp.message.core.session.Session;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.MainPanelViewFx;
-import main.java.com.ubo.tp.message.ihm.MessageAppMainViewFx;
-import main.java.com.ubo.tp.message.ihm.register.fx.AuthViewFx;
+import com.ubo.tp.message.core.DataManager;
+import com.ubo.tp.message.core.session.ISessionObserver;
+import com.ubo.tp.message.core.session.Session;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.MainPanelViewFx;
+import com.ubo.tp.message.ihm.MessageAppMainViewFx;
+import com.ubo.tp.message.ihm.register.fx.AuthViewFx;
 
 import java.io.File;
 

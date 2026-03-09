@@ -2,12 +2,12 @@ package com.ubo.tp.message;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import main.java.com.ubo.tp.message.controller.MessageAppFx;
-import main.java.com.ubo.tp.message.core.DataManager;
-import main.java.com.ubo.tp.message.core.database.ConsoleDatabase;
-import main.java.com.ubo.tp.message.core.database.Database;
-import main.java.com.ubo.tp.message.core.database.DbConnector;
-import main.java.com.ubo.tp.message.core.database.EntityManager;
+import com.ubo.tp.message.controller.MessageAppFx;
+import com.ubo.tp.message.core.DataManager;
+import com.ubo.tp.message.core.database.ConsoleDatabase;
+import com.ubo.tp.message.core.database.Database;
+import com.ubo.tp.message.core.database.DbConnector;
+import com.ubo.tp.message.core.database.EntityManager;
 
 public class MessageAppLauncherFx extends Application {
 

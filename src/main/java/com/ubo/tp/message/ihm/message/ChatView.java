@@ -1,7 +1,7 @@
-package main.java.com.ubo.tp.message.ihm.message;
+package com.ubo.tp.message.ihm.message;
 
-import main.java.com.ubo.tp.message.controller.MessageListController;
-import main.java.com.ubo.tp.message.controller.observer.IMessageListObserver;
+import com.ubo.tp.message.controller.MessageListController;
+import com.ubo.tp.message.controller.observer.IMessageListObserver;
 
 import javax.swing.*;
 import java.awt.*;

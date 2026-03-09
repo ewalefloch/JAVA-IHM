@@ -1,7 +1,7 @@
-package main.java.com.ubo.tp.message.ihm.channel;
+package com.ubo.tp.message.ihm.channel;
 
-import main.java.com.ubo.tp.message.datamodel.Channel;
-import main.java.com.ubo.tp.message.ihm.common.AbstractCellView;
+import com.ubo.tp.message.datamodel.Channel;
+import com.ubo.tp.message.ihm.common.AbstractCellView;
 
 import javax.swing.*;
 import java.awt.*;

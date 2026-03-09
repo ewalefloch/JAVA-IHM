@@ -1,9 +1,9 @@
-package main.java.com.ubo.tp.message.ihm.user;
+package com.ubo.tp.message.ihm.user;
 
-import main.java.com.ubo.tp.message.controller.UserListController;
-import main.java.com.ubo.tp.message.controller.observer.IUserListObserver;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.common.AbstractListView;
+import com.ubo.tp.message.controller.UserListController;
+import com.ubo.tp.message.controller.observer.IUserListObserver;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.common.AbstractListView;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;

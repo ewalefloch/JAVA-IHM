@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.register.fx;
+package com.ubo.tp.message.ihm.register.fx;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -8,8 +8,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import main.java.com.ubo.tp.message.controller.LoginController;
-import main.java.com.ubo.tp.message.datamodel.AuthResult;
+import com.ubo.tp.message.controller.LoginController;
+import com.ubo.tp.message.datamodel.AuthResult;
 
 public class LoginFormFx extends GridPane {
     private final LoginController controller;

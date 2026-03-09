@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.user.fx;
+package com.ubo.tp.message.ihm.user.fx;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -9,8 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
 
 public class UserCellViewFx extends AbstractCellViewFx<User> {
 

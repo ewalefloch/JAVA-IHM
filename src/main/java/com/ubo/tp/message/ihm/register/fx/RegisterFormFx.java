@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.register.fx;
+package com.ubo.tp.message.ihm.register.fx;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.HPos;
@@ -10,8 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
-import main.java.com.ubo.tp.message.controller.LoginController;
-import main.java.com.ubo.tp.message.datamodel.AuthResult;
+import com.ubo.tp.message.controller.LoginController;
+import com.ubo.tp.message.datamodel.AuthResult;
 
 public class RegisterFormFx extends GridPane {
     private final LoginController controller;

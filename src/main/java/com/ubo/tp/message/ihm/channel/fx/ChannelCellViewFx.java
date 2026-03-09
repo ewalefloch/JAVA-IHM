@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.channel.fx;
+package com.ubo.tp.message.ihm.channel.fx;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,10 +8,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import main.java.com.ubo.tp.message.controller.ChannelListController;
-import main.java.com.ubo.tp.message.datamodel.Channel;
-import main.java.com.ubo.tp.message.datamodel.User;
-import main.java.com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
+import com.ubo.tp.message.controller.ChannelListController;
+import com.ubo.tp.message.datamodel.Channel;
+import com.ubo.tp.message.datamodel.User;
+import com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
 
 public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
 

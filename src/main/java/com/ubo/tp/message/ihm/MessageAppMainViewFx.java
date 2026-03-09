@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm;
+package com.ubo.tp.message.ihm;
 
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -8,8 +8,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import main.java.com.ubo.tp.message.controller.MenuActionController;
-import main.java.com.ubo.tp.message.controller.MessageAppFx;
+import com.ubo.tp.message.controller.MenuActionController;
 
 import java.util.Optional;
 

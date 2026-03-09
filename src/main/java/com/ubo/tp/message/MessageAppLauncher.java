@@ -1,13 +1,12 @@
 package com.ubo.tp.message;
 
-import main.java.com.ubo.tp.message.controller.MessageAppFx;
-import main.java.com.ubo.tp.message.core.DataManager;
-import main.java.com.ubo.tp.message.core.database.Database;
-import main.java.com.ubo.tp.message.core.database.DbConnector;
-import main.java.com.ubo.tp.message.core.database.EntityManager;
-import main.java.com.ubo.tp.message.core.database.ConsoleDatabase;
-import main.java.com.ubo.tp.message.controller.MessageApp;
-import mock.MessageAppMock;
+import com.ubo.tp.message.controller.MessageAppFx;
+import com.ubo.tp.message.core.DataManager;
+import com.ubo.tp.message.core.database.Database;
+import com.ubo.tp.message.core.database.DbConnector;
+import com.ubo.tp.message.core.database.EntityManager;
+import com.ubo.tp.message.core.database.ConsoleDatabase;
+import com.ubo.tp.message.controller.MessageApp;
 
 /**
  * Classe de lancement de l'application.
@@ -40,11 +39,6 @@ public class MessageAppLauncher {
 		ConsoleDatabase consoleDatabase = new ConsoleDatabase();
 
 		dataManager.addObserver(consoleDatabase);
-
-		if (IS_MOCK_ENABLED) {
-			MessageAppMock mock = new MessageAppMock(dbConnector, dataManager);
-			mock.showGUI();
-		}
 
 		MessageApp messageApp = new MessageApp(dataManager);
 		messageApp.init();

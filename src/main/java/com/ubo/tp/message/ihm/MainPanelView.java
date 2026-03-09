@@ -1,9 +1,9 @@
-package main.java.com.ubo.tp.message.ihm;
+package com.ubo.tp.message.ihm;
 
-import main.java.com.ubo.tp.message.controller.MainPanelController;
-import main.java.com.ubo.tp.message.ihm.channel.ChannelListView;
-import main.java.com.ubo.tp.message.ihm.message.ChatView;
-import main.java.com.ubo.tp.message.ihm.user.UserListView;
+import com.ubo.tp.message.controller.MainPanelController;
+import com.ubo.tp.message.ihm.channel.ChannelListView;
+import com.ubo.tp.message.ihm.message.ChatView;
+import com.ubo.tp.message.ihm.user.UserListView;
 
 import javax.swing.*;
 import java.awt.*;

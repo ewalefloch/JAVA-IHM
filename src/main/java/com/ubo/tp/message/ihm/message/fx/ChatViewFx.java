@@ -1,4 +1,4 @@
-package main.java.com.ubo.tp.message.ihm.message.fx;
+package com.ubo.tp.message.ihm.message.fx;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -7,8 +7,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import main.java.com.ubo.tp.message.controller.MessageListController;
-import main.java.com.ubo.tp.message.controller.observer.IMessageListObserver;
+import com.ubo.tp.message.controller.MessageListController;
+import com.ubo.tp.message.controller.observer.IMessageListObserver;
 
 public class ChatViewFx extends BorderPane implements IMessageListObserver {
 
