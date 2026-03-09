@@ -33,3 +33,19 @@ sonar {
     }
 }
 
+tasks.register('fatJar', Jar) {
+    group = "build"
+    description = "Génère un Fat Jar contenant toutes les dépendances"
+    archiveClassifier.set("all")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes 'Main-Class': 'com.ubo.tp.message.Main'
+    }
+
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
