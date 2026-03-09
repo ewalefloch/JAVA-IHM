@@ -15,19 +15,22 @@ import com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
 
 public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
 
-    private Label nameLabel;
     private Label infoLabel;
-    private final ChannelListController controller;
-
-    public ChannelCellViewFx(Channel channel, ChannelListController controller) {
+    private boolean isMyChannel;
+    private final Runnable onDeleteAction;
+    private final boolean isPrivate;
+    public ChannelCellViewFx(Channel channel,boolean isMe,Runnable onDeleteAction,boolean isPrivate) {
         super(channel);
-        this.controller = controller;
+        this.isMyChannel = isMe;
+        this.onDeleteAction = onDeleteAction;
+        this.isPrivate = isPrivate;
         refresh();
         checkDeletable();
     }
 
     @Override
     protected void buildContent() {
+        Label nameLabel;
         Label iconLabel = new Label("#");
         iconLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         iconLabel.setTextFill(Color.web("#5865F2"));
@@ -52,14 +55,13 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
     }
 
     private void checkDeletable() {
-        if (controller.isMyChannel(item)) {
+        if (isMyChannel) {
             Button deleteBtn = new Button("🗑");
             deleteBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: red; -fx-cursor: hand;");
 
-            // Éviter que le clic sur le bouton ne sélectionne le canal
             deleteBtn.setOnAction(e -> {
                 e.consume();
-                controller.deleteChannel(item);
+                onDeleteAction.run();
             });
 
             this.setRight(deleteBtn);
@@ -71,7 +73,7 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
     public void refresh() {
         int userCount = item.getUsers().size();
         String creatorTag = item.getCreator().getUserTag();
-        String type = controller.isChannelPrivate(item) ? "Privé" : "Public";
+        String type = isPrivate ? "Privé" : "Public";
         infoLabel.setText(type + " • " + userCount + " membre(s) • Créé par @" + creatorTag);
     }
 }

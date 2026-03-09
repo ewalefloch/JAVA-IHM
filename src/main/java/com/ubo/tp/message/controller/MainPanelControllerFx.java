@@ -25,7 +25,7 @@ public class MainPanelControllerFx {
     private final UserListViewFx userListView;
     private final ChatViewFx chatView;
     private final MessageListViewFx messageListView;
-
+    private static final String ADMIN ="admin";
     public MainPanelControllerFx(DataManager dataManager, ISession session) {
         this.dataManager = dataManager;
         this.session = session;
@@ -42,10 +42,10 @@ public class MainPanelControllerFx {
 
         this.chatView = new ChatViewFx(messageListController,messageListView);
         messageListView.addObserver(messageListController);
-        
+
         this.channelListView = new ChannelListViewFx(channelListController);
         this.userListView = new UserListViewFx(userListController);
-
+        channelListView.addObserver(channelListController);
     }
     private void initDefaultChannel() {
         Set<Channel> channels = dataManager.getChannels(session.getConnectedUser());
@@ -54,7 +54,7 @@ public class MainPanelControllerFx {
             Set<User> users  = dataManager.getUsers();
             User user = null;
             if (users == null || users.isEmpty()){
-                user = new User("admin", "admin","admin");
+                user = new User(ADMIN, ADMIN,ADMIN);
                 dataManager.sendUser(user);
             }else {
                 user = users.iterator().next();

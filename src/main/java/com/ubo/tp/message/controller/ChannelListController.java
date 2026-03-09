@@ -1,5 +1,6 @@
 package com.ubo.tp.message.controller;
 
+import com.ubo.tp.message.controller.observer.IChannelActionObserver;
 import com.ubo.tp.message.controller.observer.IChannelListObserver;
 import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
 import com.ubo.tp.message.controller.observer.IRemoveUserChannelObserver;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ChannelListController implements IDatabaseObserver, IRemoveUserChannelObserver {
+public class ChannelListController implements IDatabaseObserver, IChannelActionObserver {
 
     private final DataManager dataManager;
     private final ISession session;
@@ -39,10 +40,6 @@ public class ChannelListController implements IDatabaseObserver, IRemoveUserChan
     public void deleteChannel(Channel channel) {
         dataManager.deleteChannel(channel);
         notifyObservers();
-    }
-
-    public boolean isMyChannel(Channel channel){
-        return channel.getCreator().getUuid().equals(session.getConnectedUser().getUuid());
     }
 
     public boolean isChannelPrivate(Channel channel) {
@@ -148,7 +145,12 @@ public class ChannelListController implements IDatabaseObserver, IRemoveUserChan
     }
 
     @Override
-    public void onemoveUserChannel() {
-        notifyObservers();
+    public void onDeleteRequested(Channel channel) {
+        dataManager.deleteChannel(channel);
+    }
+
+    @Override
+    public boolean isMyChannel(Channel channel) {
+        return channel.getCreator().getUuid().equals(session.getConnectedUser().getUuid());
     }
 }
