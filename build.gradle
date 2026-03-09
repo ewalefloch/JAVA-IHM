@@ -29,7 +29,8 @@ dependencies {
 sonar {
     properties {
         property("sonar.projectKey", "ewalefloch_JAVA-IHM")
-        property("sonar.projectName", "ewalefloch_JAVA-IHM")
+        property("sonar.organization", "ewalefloch")
+        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
