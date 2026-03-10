@@ -11,6 +11,7 @@ import com.ubo.tp.message.datamodel.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class ChannelListController implements IDatabaseObserver, IChannelActionObserver {
 
@@ -19,6 +20,9 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
 
     private final List<IChannelListObserver> observers = new ArrayList<>();
     private final List<IChannelSelectionObserver> selectionObservers = new ArrayList<>();
+
+    private Channel currentSelectedChannel;
+    private final Set<java.util.UUID> unreadChannels = new java.util.HashSet<>();
 
     //SRS-MAP-USR-001
     public ChannelListController(DataManager dataManager, ISession session) {
@@ -85,14 +89,30 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
     }
 
     public void selectChannel(Channel channel) {
+        this.currentSelectedChannel = channel;
+
+        if (unreadChannels.contains(channel.getUuid())) {
+            unreadChannels.remove(channel.getUuid());
+            notifyObservers();
+        }
+
         for (IChannelSelectionObserver observer : selectionObservers) {
             observer.onChannelSelected(channel);
         }
     }
 
+    public boolean hasUnreadMessages(Channel channel) {
+        return unreadChannels.contains(channel.getUuid());
+    }
+
     @Override
     public void notifyMessageAdded(Message addedMessage) {
-        // IGNORE
+        UUID recipientUuid = addedMessage.getRecipient();
+
+        if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
+            unreadChannels.add(recipientUuid);
+            notifyObservers();
+        }
     }
 
     @Override

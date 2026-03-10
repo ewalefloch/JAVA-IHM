@@ -1,6 +1,5 @@
 package com.ubo.tp.message.ihm.channel.fx;
 
-import com.ubo.tp.message.controller.observer.IChannelActionObserver;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -12,14 +11,13 @@ import com.ubo.tp.message.datamodel.Channel;
 import com.ubo.tp.message.datamodel.User;
 import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IChannelListObserver {
 
     private final ChannelListController controller;
     private ChannelCellViewFx selectedChannelCell;
-
+    private final Map<UUID, ChannelCellViewFx> cells = new HashMap<>();
 
     public ChannelListViewFx(ChannelListController controller) {
         super("Canaux");
@@ -50,17 +48,17 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
 
     @Override
     protected BorderPane createCell(Channel item) {
-        ChannelCellViewFx cell = new ChannelCellViewFx(item, controller.isMyChannel(item), () -> {
-                controller.deleteChannel(item);
-        },controller.isChannelPrivate(item));
+        ChannelCellViewFx cell = new ChannelCellViewFx(item, controller.isMyChannel(item), () -> controller.deleteChannel(item),controller.isChannelPrivate(item));
 
+        cell.setId(item.getUuid().toString());
+        cells.put(item.getUuid(), cell);
         cell.setOnMouseClicked(e -> {
             if (selectedChannelCell != null) {
                 selectedChannelCell.setSelected(false);
             }
             selectedChannelCell = cell;
             cell.setSelected(true);
-
+            cell.setUnread(false);
             controller.selectChannel(item);
         });
 
@@ -83,7 +81,17 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
 
     @Override
     public void onChannelListChanged() {
-        Platform.runLater(() -> updateList(controller.getChannels()));
+        Platform.runLater(() -> {
+            updateList(controller.getChannels());
+
+            for (Channel channel : controller.getChannels()) {
+                ChannelCellViewFx cell = cells.get(channel.getUuid());
+                if (cell != null) {
+                    cell.setUnread(controller.hasUnreadMessages(channel));
+                    cell.refresh();
+                }
+            }
+        });
     }
 
     @Override

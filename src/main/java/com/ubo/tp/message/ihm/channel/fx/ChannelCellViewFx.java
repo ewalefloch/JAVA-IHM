@@ -7,8 +7,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import com.ubo.tp.message.datamodel.Channel;
@@ -21,6 +23,8 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
     private boolean isMyChannel;
     private final Runnable onDeleteAction;
     private final boolean isPrivate;
+    private Circle unreadIndicator;
+
     public ChannelCellViewFx(Channel channel,boolean isMe,Runnable onDeleteAction,boolean isPrivate) {
         super(channel);
         this.isMyChannel = isMe;
@@ -44,11 +48,16 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
         nameLabel = new Label(item.getName());
         nameLabel.setFont(Font.font(fontArial, FontWeight.BOLD, 14));
 
+        unreadIndicator = new Circle(4, Color.TRANSPARENT);
+
+        HBox nameBox = new HBox(5, nameLabel, unreadIndicator);
+        nameBox.setAlignment(Pos.CENTER_LEFT);
+
         infoLabel = new Label();
         infoLabel.setFont(Font.font(fontArial, 11));
         infoLabel.setTextFill(Color.GRAY);
 
-        infoPanel.getChildren().addAll(nameLabel, infoLabel);
+        infoPanel.getChildren().addAll(nameBox, infoLabel);
 
         this.setLeft(iconLabel);
         this.setCenter(infoPanel);
@@ -88,6 +97,11 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
         }
     }
 
+    public void setUnread(boolean unread) {
+        if (unreadIndicator != null) {
+            unreadIndicator.setFill(unread ? Color.RED : Color.TRANSPARENT);
+        }
+    }
 
     @Override
     public void refresh() {
