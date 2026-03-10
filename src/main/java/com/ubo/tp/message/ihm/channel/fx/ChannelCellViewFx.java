@@ -1,16 +1,15 @@
 package com.ubo.tp.message.ihm.channel.fx;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
+import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import com.ubo.tp.message.datamodel.Channel;
@@ -20,10 +19,11 @@ import javafx.util.Duration;
 public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
 
     private Label infoLabel;
-    private boolean isMyChannel;
+    private final boolean isMyChannel;
     private final Runnable onDeleteAction;
     private final boolean isPrivate;
     private Circle unreadIndicator;
+    private PathTransition orbitAnimation;
 
     public ChannelCellViewFx(Channel channel,boolean isMe,Runnable onDeleteAction,boolean isPrivate) {
         super(channel);
@@ -50,8 +50,21 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
 
         unreadIndicator = new Circle(4, Color.TRANSPARENT);
 
-        HBox nameBox = new HBox(5, nameLabel, unreadIndicator);
-        nameBox.setAlignment(Pos.CENTER_LEFT);
+
+        Ellipse orbitPath = new Ellipse();
+        orbitPath.setCenterX(0);
+        orbitPath.setCenterY(0);
+
+        orbitPath.radiusXProperty().bind(nameLabel.widthProperty().divide(2).add(14));
+
+        orbitPath.setRadiusY(14);
+
+        StackPane nameBox = new StackPane(nameLabel, unreadIndicator);
+        nameBox.setAlignment(Pos.BASELINE_LEFT);
+
+        orbitAnimation = new PathTransition(Duration.millis(2000), orbitPath, unreadIndicator);
+        orbitAnimation.setCycleCount(Animation.INDEFINITE);
+        orbitAnimation.setInterpolator(Interpolator.LINEAR);
 
         infoLabel = new Label();
         infoLabel.setFont(Font.font(fontArial, 11));
@@ -73,10 +86,8 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
 
             deleteBtn.setOnAction(e -> {
                 e.consume();
-                onDeleteAction.run();
 
                 deleteBtn.setDisable(true);
-
                 this.setStyle("-fx-background-color: #D3D3D3;");
 
                 ScaleTransition scale = new ScaleTransition(Duration.millis(300), this);
@@ -100,6 +111,14 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
     public void setUnread(boolean unread) {
         if (unreadIndicator != null) {
             unreadIndicator.setFill(unread ? Color.RED : Color.TRANSPARENT);
+
+            if (unread) {
+                orbitAnimation.play();
+            } else {
+                orbitAnimation.stop();
+                unreadIndicator.setTranslateX(0);
+                unreadIndicator.setTranslateY(0);
+            }
         }
     }
 
