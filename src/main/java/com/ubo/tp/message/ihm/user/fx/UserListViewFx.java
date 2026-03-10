@@ -23,21 +23,27 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
     private final UserListController controller;
     private UserCellViewFx selectedUserCell;
     private Button manageBtn;
+    private Button leaveBtn;
 
     public UserListViewFx(UserListController controller) {
         super("Utilisateurs");
         this.controller = controller;
-        addManageButton();
+        addHeaderButtons();
         this.controller.addObserver(this);
     }
 
-    private void addManageButton() {
-        manageBtn = new Button("Gérer chanel");
+    private void addHeaderButtons() {
+        manageBtn = new Button("Gérer canal");
         manageBtn.setStyle("-fx-background-color: #5865F2; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
         manageBtn.setVisible(false);
         manageBtn.setManaged(false);
-
         manageBtn.setOnAction(e -> showManageChannelDialog());
+
+        leaveBtn = new Button("Quitter canal");
+        leaveBtn.setStyle("-fx-background-color: #ED4245; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        leaveBtn.setVisible(false);
+        leaveBtn.setManaged(false);
+        leaveBtn.setOnAction(e -> controller.leaveCurrentChannel()); // Appel au contrôleur
 
         VBox headerPanel = (VBox) this.getTop();
         TextField searchField = (TextField) headerPanel.getChildren().get(1);
@@ -45,12 +51,11 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
         headerPanel.getChildren().remove(searchField);
 
         HBox searchContainer = new HBox(5);
-        searchContainer.getChildren().addAll(searchField, manageBtn);
+        searchContainer.getChildren().addAll(searchField, manageBtn, leaveBtn);
         HBox.setHgrow(searchField, Priority.ALWAYS);
 
         headerPanel.getChildren().add(searchContainer);
     }
-
     @Override
     protected BorderPane createCell(User item) {
         UserCellViewFx cell = new UserCellViewFx(item);
@@ -83,10 +88,16 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
         List<User> users = controller.getUsers();
         Platform.runLater(() -> {
             updateList(users);
-            if (manageBtn != null) {
+
+            if (manageBtn != null && leaveBtn != null) {
                 boolean canManage = controller.canManageCurrentChannel();
+                boolean canLeave = controller.canLeaveCurrentChannel();
+
                 manageBtn.setVisible(canManage);
                 manageBtn.setManaged(canManage);
+
+                leaveBtn.setVisible(canLeave);
+                leaveBtn.setManaged(canLeave);
             }
         });
     }

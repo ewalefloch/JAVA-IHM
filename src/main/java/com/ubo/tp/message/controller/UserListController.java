@@ -13,7 +13,6 @@ import com.ubo.tp.message.datamodel.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Contrôleur pour la gestion de la liste des utilisateurs.
@@ -59,7 +58,7 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
                     }
                     return u1.isOnline() ? -1 : 1;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -141,6 +140,26 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
                 currentChannel.removeUser(u);
             }
             dataManager.sendChannel(currentChannel);
+            notifyObservers();
+            notifyRemoveUser();
+        }
+    }
+
+    public boolean canLeaveCurrentChannel() {
+        if (currentChannel == null || !currentChannel.ismPrivate()) {
+            return false;
+        }
+        return !currentChannel.getCreator().getUuid().equals(getConnectedUser().getUuid());
+    }
+
+    public void leaveCurrentChannel() {
+        if (canLeaveCurrentChannel()) {
+            currentChannel.removeUser(getConnectedUser());
+
+            dataManager.sendChannel(currentChannel);
+
+            currentChannel = null;
+
             notifyObservers();
             notifyRemoveUser();
         }
