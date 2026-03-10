@@ -108,10 +108,31 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
     @Override
     public void notifyMessageAdded(Message addedMessage) {
         UUID recipientUuid = addedMessage.getRecipient();
+        User me = session.getConnectedUser();
 
         if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
             unreadChannels.add(recipientUuid);
             notifyObservers();
+        }
+
+        if (me != null && !addedMessage.getSender().getUuid().equals(me.getUuid())) {
+
+            Channel targetChannel = getChannels().stream()
+                    .filter(c -> c.getUuid().equals(recipientUuid))
+                    .findFirst()
+                    .orElse(null);
+
+            if (targetChannel != null) {
+                boolean hasAtSymbol = addedMessage.getText().contains("@");
+
+                if (hasAtSymbol && (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid))) {
+
+                    for (IChannelListObserver obs : observers) {
+                        obs.onNotificationTriggered(addedMessage, targetChannel, true);
+                    }
+
+                }
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import com.ubo.tp.message.datamodel.User;
 import com.ubo.tp.message.ihm.channel.fx.ChannelListViewFx;
 import com.ubo.tp.message.ihm.message.fx.ChatViewFx;
 import com.ubo.tp.message.ihm.message.fx.MessageListViewFx;
+import com.ubo.tp.message.ihm.message.fx.NotificationPopupFx;
 import com.ubo.tp.message.ihm.user.fx.UserListViewFx;
 
 import java.util.Set;
@@ -42,6 +43,8 @@ public class MainPanelControllerFx {
 
         this.channelListView = new ChannelListViewFx(channelListController);
         this.userListView = new UserListViewFx(userListController);
+
+        channelListController.addObserver(new NotificationPopupFx(channelListController));
     }
     private void initDefaultChannel() {
         Set<Channel> channels = dataManager.getChannels(session.getConnectedUser());

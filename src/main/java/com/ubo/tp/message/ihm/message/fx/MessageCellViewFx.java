@@ -1,5 +1,6 @@
 package com.ubo.tp.message.ihm.message.fx;
 
+import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +10,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import com.ubo.tp.message.datamodel.Message;
 import com.ubo.tp.message.ihm.common.fx.AbstractCellViewFx;
+import javafx.util.Duration;
 
 public class MessageCellViewFx extends AbstractCellViewFx<Message> {
 
@@ -48,9 +50,56 @@ public class MessageCellViewFx extends AbstractCellViewFx<Message> {
 
             deleteBtn.setOnAction(e -> {
                 e.consume();
-                if (onDeleteAction != null) {
-                    onDeleteAction.run();
-                }
+                deleteBtn.setDisable(true);
+
+                // Initialisation de l'état
+                this.setRotate(0);
+                this.setTranslateY(0);
+                this.setOpacity(1);
+
+                //Balancement initial : 0 à 30 degrés
+                RotateTransition swing1 = new RotateTransition(Duration.millis(300), this);
+                swing1.setFromAngle(0);
+                swing1.setToAngle(30);
+                swing1.setInterpolator(Interpolator.EASE_BOTH);
+
+                // Grand balancement : 30 à -30 degrés
+                RotateTransition swing2 = new RotateTransition(Duration.millis(500), this);
+                swing2.setFromAngle(30);
+                swing2.setToAngle(-30);
+                swing2.setInterpolator(Interpolator.EASE_BOTH);
+
+                //Retour au centre : -30 à 0 degrés
+                RotateTransition swing3 = new RotateTransition(Duration.millis(300), this);
+                swing3.setFromAngle(-30);
+                swing3.setToAngle(0);
+                swing3.setInterpolator(Interpolator.EASE_BOTH);
+
+                // Groupement du balancement complet
+                SequentialTransition fullSwing = new SequentialTransition(swing1, swing2, swing3);
+                fullSwing.setCycleCount(2); // On peut le répéter si on veut plus de mouvement
+
+                // Chute et disparition
+                TranslateTransition fall = new TranslateTransition(Duration.millis(600), this);
+                fall.setToY(1000);
+                fall.setInterpolator(Interpolator.EASE_IN);
+
+                FadeTransition fade = new FadeTransition(Duration.millis(600), this);
+                fade.setToValue(0);
+
+                // Enchaînement final
+                SequentialTransition totalSequence = new SequentialTransition(
+                        fullSwing,
+                        new ParallelTransition(fall, fade)
+                );
+
+                totalSequence.setOnFinished(ev -> {
+                    if (onDeleteAction != null) {
+                        onDeleteAction.run();
+                    }
+                });
+
+                totalSequence.play();
             });
 
             this.setRight(deleteBtn);

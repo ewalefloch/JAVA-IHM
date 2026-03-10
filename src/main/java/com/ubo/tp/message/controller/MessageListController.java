@@ -76,6 +76,33 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
         }
     }
 
+    /**
+     * Retourne la liste des utilisateurs du canal actuel (pour les mentions).
+     */
+    public List<User> getCurrentChannelUsers(String query) {
+        if (currentChannel == null) return new ArrayList<>();
+
+        List<User> availableUsers;
+
+        if (currentChannel.ismPrivate()) {
+            availableUsers = new ArrayList<>(currentChannel.getUsers());
+            availableUsers.add(currentChannel.getCreator());
+        } else {
+            availableUsers = new ArrayList<>(dataManager.getUsers());
+        }
+
+        return availableUsers.stream()
+                .filter(u -> !u.getUuid().equals(session.getConnectedUser().getUuid()))
+                .filter(u -> {
+                    if (query == null || query.trim().isEmpty()) return true;
+
+                    String lowerQuery = query.toLowerCase();
+                    return u.getUserTag().toLowerCase().startsWith(lowerQuery) ||
+                            u.getName().toLowerCase().startsWith(lowerQuery);
+                })
+                .toList();
+    }
+
     public void setCurrentChannel(Channel currentChannel) {
         this.currentChannel = currentChannel;
     }
