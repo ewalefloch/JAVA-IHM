@@ -1,7 +1,9 @@
 package com.ubo.tp.message.ihm.message.fx;
 
 import com.ubo.tp.message.controller.ChannelListController;
-import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
+import com.ubo.tp.message.controller.observer.IChannelListObserver;
+import com.ubo.tp.message.datamodel.Channel;
+import com.ubo.tp.message.datamodel.Message;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
@@ -19,76 +21,128 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import com.ubo.tp.message.controller.observer.IChannelListObserver;
-import com.ubo.tp.message.datamodel.Channel;
-import com.ubo.tp.message.datamodel.Message;
-
+/**
+ * Composant gérant l'affichage des notifications surgissantes (popups).
+ */
 public class NotificationPopupFx implements IChannelListObserver {
 
     private final ChannelListController controller;
+
     public NotificationPopupFx(ChannelListController controller) {
-        this.controller= controller;
+        this.controller = controller;
     }
+
+    // --- POINTS D'ENTRÉE (Observer) ---
 
     @Override
     public void onChannelListChanged() {
-        // ignore
+        // Ignoré
     }
 
     @Override
     public void onNotificationTriggered(Message message, Channel targetChannel, boolean isMention) {
-        Platform.runLater(() -> {
-            Stage popupStage = new Stage();
-            popupStage.initStyle(StageStyle.TRANSPARENT);
-            popupStage.setAlwaysOnTop(true);
+        Platform.runLater(() -> handleNotificationDisplay(message, targetChannel));
+    }
 
-            VBox popupContent = new VBox(5);
-            popupContent.setPadding(new Insets(15));
-            popupContent.setStyle("-fx-background-color: #2f3136; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #202225; -fx-border-width: 2;");
-            popupContent.setPrefWidth(320);
+    // --- LOGIQUE DE TRAITEMENT (Handlers) ---
 
-            Label titleLabel = new Label("Notification de " + message.getSender().getName());
-            titleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+    /**
+     * Gère la création et l'affichage visuel de la notification.
+     */
+    private void handleNotificationDisplay(Message message, Channel targetChannel) {
+        Stage popupStage = createPopupStage();
+        VBox popupContent = createPopupContent(message);
 
-            Label bodyLabel = new Label(message.getText());
-            bodyLabel.setStyle("-fx-text-fill: #dcddde; -fx-font-size: 12px;");
-            bodyLabel.setWrapText(true);
+        // Configuration de l'action au clic
+        popupContent.setOnMouseClicked(e -> handleNotificationClick(popupStage, targetChannel));
 
-            popupContent.getChildren().addAll(titleLabel, bodyLabel);
+        Scene scene = new Scene(popupContent);
+        scene.setFill(Color.TRANSPARENT);
+        popupStage.setScene(scene);
 
-            Scene scene = new Scene(popupContent);
-            scene.setFill(Color.TRANSPARENT);
-            popupStage.setScene(scene);
+        positionPopup(popupStage);
+        animateAndShow(popupStage, popupContent);
+    }
 
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            popupStage.setX(screenBounds.getMaxX() - 340);
-            popupStage.setY(screenBounds.getMaxY() - 100);
+    /**
+     * Gère l'action utilisateur lors du clic sur la notification.
+     */
+    private void handleNotificationClick(Stage popupStage, Channel targetChannel) {
+        controller.selectChannel(targetChannel);
 
-            popupContent.setCursor(Cursor.HAND);
-            popupContent.setOnMouseClicked(e -> {
-                controller.selectChannel(targetChannel);
-                popupStage.close();
-            });
+        bringMainApplicationToFront();
 
-            popupContent.setTranslateY(50);
-            popupContent.setOpacity(0);
-            popupStage.show();
+        popupStage.close();
+    }
 
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), popupContent);
-            slideIn.setToY(0);
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), popupContent);
-            fadeIn.setToValue(1.0);
-            new ParallelTransition(slideIn, fadeIn).play();
+    // --- MÉTHODES UTILITAIRES PRIVÉES ---
 
-            // Disparition automatique après 5 secondes
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
-            delay.setOnFinished(e -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), popupContent);
-                fadeOut.setToValue(0.0);
-                fadeOut.setOnFinished(ev -> popupStage.close());
-                fadeOut.play();
-            });
-            delay.play();
+    /**
+     * Remet la fenêtre principale de l'application au premier plan Windows/OS.
+     */
+    private void bringMainApplicationToFront() {
+        // On récupère le Stage principal (la fenêtre de l'appli)
+        Stage mainStage = (Stage) Stage.getWindows().filtered(w -> w instanceof Stage).stream().findFirst().orElse(null);
+
+        if (mainStage != null) {
+            mainStage.setIconified(false);
+            mainStage.show();
+            mainStage.toFront();
+            mainStage.requestFocus();
+        }
+    }
+
+    private Stage createPopupStage() {
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setAlwaysOnTop(true);
+        return stage;
+    }
+
+    private VBox createPopupContent(Message message) {
+        VBox content = new VBox(5);
+        content.setPadding(new Insets(15));
+        content.setStyle("-fx-background-color: #2f3136; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #202225; -fx-border-width: 2;");
+        content.setPrefWidth(320);
+        content.setCursor(Cursor.HAND);
+
+        Label titleLabel = new Label("Notification de " + message.getSender().getName());
+        titleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+
+        Label bodyLabel = new Label(message.getText());
+        bodyLabel.setStyle("-fx-text-fill: #dcddde; -fx-font-size: 12px;");
+        bodyLabel.setWrapText(true);
+
+        content.getChildren().addAll(titleLabel, bodyLabel);
+        return content;
+    }
+
+    private void positionPopup(Stage stage) {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX(screenBounds.getMaxX() - 340);
+        stage.setY(screenBounds.getMaxY() - 100);
+    }
+
+    private void animateAndShow(Stage stage, VBox content) {
+        content.setTranslateY(50);
+        content.setOpacity(0);
+        stage.show();
+
+        // Animation d'entrée
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), content);
+        slideIn.setToY(0);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), content);
+        fadeIn.setToValue(1.0);
+        new ParallelTransition(slideIn, fadeIn).play();
+
+        // Animation de sortie automatique après 5s
+        PauseTransition delay = new PauseTransition(Duration.seconds(5));
+        delay.setOnFinished(e -> {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), content);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(ev -> stage.close());
+            fadeOut.play();
         });
+        delay.play();
     }
 }

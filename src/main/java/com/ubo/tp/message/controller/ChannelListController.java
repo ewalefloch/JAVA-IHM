@@ -142,11 +142,8 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
                 .orElse(null);
 
         if (targetChannel != null && message.getText().contains("@")) {
-            // On ne notifie que si on n'est pas déjà sur le canal
-            if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
-                for (IChannelListObserver obs : observers) {
-                    obs.onNotificationTriggered(message, targetChannel, true);
-                }
+            for (IChannelListObserver obs : observers) {
+                obs.onNotificationTriggered(message, targetChannel, true);
             }
         }
     }
