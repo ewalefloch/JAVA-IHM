@@ -3,6 +3,7 @@ package com.ubo.tp.message.controller;
 import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
 import com.ubo.tp.message.controller.observer.IMessageActionObserver;
 import com.ubo.tp.message.controller.observer.IMessageListObserver;
+import com.ubo.tp.message.controller.observer.IUserSelectionObserver;
 import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.database.IDatabaseObserver;
 import com.ubo.tp.message.core.session.ISession;

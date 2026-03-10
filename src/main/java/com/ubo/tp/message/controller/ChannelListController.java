@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class ChannelListController implements IDatabaseObserver, IChannelActionObserver {
+public class ChannelListController implements IDatabaseObserver, IChannelActionObserver,IUserSelectionObserver {
 
     private final DataManager dataManager;
     private final ISession session;
@@ -166,5 +166,35 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
 
     public boolean isMyChannel(Channel channel) {
         return channel.getCreator().getUuid().equals(session.getConnectedUser().getUuid());
+    }
+
+    @Override
+    public void onUserSelected(User selectedUser) {
+        User me = session.getConnectedUser();
+
+        Channel privateChannel = null;
+
+        for (Channel c : dataManager.getChannels()) {
+            if (c.ismPrivate() && c.getUsers().size() == 1) {
+                User guest = c.getUsers().get(0);
+
+                boolean amICreator = c.getCreator().getUuid().equals(me.getUuid()) && guest.getUuid().equals(selectedUser.getUuid());
+                boolean isHeCreator = c.getCreator().getUuid().equals(selectedUser.getUuid()) && guest.getUuid().equals(me.getUuid());
+
+                if (amICreator || isHeCreator) {
+                    privateChannel = c;
+                    break;
+                }
+            }
+        }
+
+        if (privateChannel == null) {
+            List<User> guests = new ArrayList<>();
+            guests.add(selectedUser);
+            privateChannel = new Channel(me, "MP - " + selectedUser.getName(), guests);
+
+            dataManager.sendChannel(privateChannel);
+        }
+        selectChannel(privateChannel);
     }
 }

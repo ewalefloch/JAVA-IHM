@@ -58,7 +58,11 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
     }
     @Override
     protected BorderPane createCell(User item) {
-        UserCellViewFx cell = new UserCellViewFx(item);
+        boolean isMyself = item.getUuid().equals(controller.getConnectedUser().getUuid());
+
+        UserCellViewFx cell = new UserCellViewFx(item, isMyself, () -> {
+            controller.selectUserForMessaging(item);
+        });
 
         cell.setOnMouseClicked(e -> selectUser(cell));
 

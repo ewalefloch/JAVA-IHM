@@ -32,6 +32,9 @@ public class MainPanelControllerFx {
 
         channelListController.addSelectionObserver(this.messageListController);
         channelListController.addSelectionObserver(userListController);
+
+        userListController.addUserSelectionObserver(channelListController);
+
         MessageListViewFx messageListView = new MessageListViewFx();
 
         this.chatView = new ChatViewFx(messageListController, messageListView);

@@ -3,6 +3,7 @@ package com.ubo.tp.message.controller;
 import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
 import com.ubo.tp.message.controller.observer.IRemoveUserChannelObserver;
 import com.ubo.tp.message.controller.observer.IUserListObserver;
+import com.ubo.tp.message.controller.observer.IUserSelectionObserver;
 import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.database.IDatabaseObserver;
 import com.ubo.tp.message.core.session.ISession;
@@ -26,7 +27,7 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
 
     private final List<IUserListObserver> observers = new ArrayList<>();
     private final List<IRemoveUserChannelObserver> observersRemoveUser = new ArrayList<>();
-
+    private final List<IUserSelectionObserver> userSelectionObservers = new ArrayList<>();
     //SRS-MAP-USR-007
     public UserListController(DataManager dataManager, ISession session) {
         this.dataManager = dataManager;
@@ -83,6 +84,16 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
     public void notifyRemoveUser(){
         for (IRemoveUserChannelObserver observer : observersRemoveUser){
             observer.onemoveUserChannel();
+        }
+    }
+
+    public void addUserSelectionObserver(IUserSelectionObserver observer) {
+        this.userSelectionObservers.add(observer);
+    }
+
+    public void selectUserForMessaging(User user) {
+        for (IUserSelectionObserver observer : userSelectionObservers) {
+            observer.onUserSelected(user);
         }
     }
 

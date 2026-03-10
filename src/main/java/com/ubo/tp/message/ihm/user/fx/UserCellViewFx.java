@@ -18,8 +18,20 @@ public class UserCellViewFx extends AbstractCellViewFx<User> {
     private Label tagLabel;
     private Circle statusIndicator;
 
-    public UserCellViewFx(User user) {
+    public UserCellViewFx(User user, boolean isMyself, Runnable onMessageAction) {
         super(user);
+        if (!isMyself && onMessageAction != null) {
+            javafx.scene.control.Button messageBtn = new javafx.scene.control.Button("💬");
+            messageBtn.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;");
+
+            messageBtn.setOnAction(e -> {
+                e.consume();
+                onMessageAction.run();
+            });
+
+            this.setRight(messageBtn);
+            BorderPane.setAlignment(messageBtn, Pos.CENTER);
+        }
     }
 
     @Override
