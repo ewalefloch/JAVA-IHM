@@ -60,24 +60,24 @@ public class MessageCellViewFx extends AbstractCellViewFx<Message> {
                 //Balancement initial : 0 à 30 degrés
                 RotateTransition swing1 = new RotateTransition(Duration.millis(300), this);
                 swing1.setFromAngle(0);
-                swing1.setToAngle(30);
+                swing1.setToAngle(15);
                 swing1.setInterpolator(Interpolator.EASE_BOTH);
 
                 // Grand balancement : 30 à -30 degrés
                 RotateTransition swing2 = new RotateTransition(Duration.millis(500), this);
-                swing2.setFromAngle(30);
-                swing2.setToAngle(-30);
+                swing2.setFromAngle(15);
+                swing2.setToAngle(-15);
                 swing2.setInterpolator(Interpolator.EASE_BOTH);
 
                 //Retour au centre : -30 à 0 degrés
                 RotateTransition swing3 = new RotateTransition(Duration.millis(300), this);
-                swing3.setFromAngle(-30);
+                swing3.setFromAngle(-15);
                 swing3.setToAngle(0);
                 swing3.setInterpolator(Interpolator.EASE_BOTH);
 
                 // Groupement du balancement complet
                 SequentialTransition fullSwing = new SequentialTransition(swing1, swing2, swing3);
-                fullSwing.setCycleCount(2); // On peut le répéter si on veut plus de mouvement
+                fullSwing.setCycleCount(1);
 
                 // Chute et disparition
                 TranslateTransition fall = new TranslateTransition(Duration.millis(600), this);

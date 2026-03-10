@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class ChannelListController implements IDatabaseObserver, IChannelActionObserver,IUserSelectionObserver {
+public class ChannelListController implements IDatabaseObserver, IChannelActionObserver, IUserSelectionObserver {
 
     private final DataManager dataManager;
     private final ISession session;
@@ -24,17 +24,17 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
     private Channel currentSelectedChannel;
     private final Set<java.util.UUID> unreadChannels = new java.util.HashSet<>();
 
-    //SRS-MAP-USR-001
     public ChannelListController(DataManager dataManager, ISession session) {
         this.dataManager = dataManager;
         this.session = session;
         dataManager.addObserver(this);
     }
 
+    // --- Méthodes Publiques ---
+
     public List<Channel> getChannels() {
         User currentUser = session.getConnectedUser();
         if (currentUser == null) return new ArrayList<>();
-
         return new ArrayList<>(dataManager.getChannels(currentUser));
     }
 
@@ -46,6 +46,19 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
         return !channel.getUsers().isEmpty();
     }
 
+    public boolean isMyChannel(Channel channel) {
+        User me = session.getConnectedUser();
+        return me != null && channel.getCreator().getUuid().equals(me.getUuid());
+    }
+
+    public boolean hasUnreadMessages(Channel channel) {
+        return unreadChannels.contains(channel.getUuid());
+    }
+
+    public Set<User> getAllUsers() {
+        return dataManager.getUsers();
+    }
+
     public String createChannel(String name, boolean isPrivate, List<User> selectedUsers) {
         if (name == null || name.trim().isEmpty()) {
             return "Le nom du canal est obligatoire.";
@@ -55,19 +68,131 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
             return "Veuillez sélectionner au moins un invité pour un canal privé.";
         }
 
-        Channel newChannel;
         User creator = session.getConnectedUser();
-
-        if (isPrivate) {
-            newChannel = new Channel(creator, name.trim(), selectedUsers);
-        } else {
-            newChannel = new Channel(creator, name.trim());
-        }
+        Channel newChannel = isPrivate ? new Channel(creator, name.trim(), selectedUsers)
+                : new Channel(creator, name.trim());
 
         dataManager.sendChannel(newChannel);
-
         return null;
     }
+
+    public void selectChannel(Channel channel) {
+        this.currentSelectedChannel = channel;
+        handleChannelSelection(channel);
+    }
+
+    // --- Implémentation IDatabaseObserver ---
+
+    @Override
+    public void notifyMessageAdded(Message addedMessage) {
+        handleIncomingMessage(addedMessage);
+    }
+
+    @Override
+    public void notifyChannelAdded(Channel addedChannel) {
+        handleChannelListChanged();
+    }
+
+    @Override
+    public void notifyChannelDeleted(Channel deletedChannel) {
+        handleChannelListChanged();
+    }
+
+    @Override
+    public void notifyChannelModified(Channel modifiedChannel) {
+        handleChannelListChanged();
+    }
+
+    // --- Implémentation IUserSelectionObserver ---
+
+    @Override
+    public void onUserSelected(User selectedUser) {
+        handlePrivateConversationRequest(selectedUser);
+    }
+
+    // --- Implémentation IChannelActionObserver ---
+
+    @Override
+    public void onDeleteRequested(Channel channel) {
+        deleteChannel(channel);
+    }
+
+    // --- Logique Métier ---
+
+    private void handleIncomingMessage(Message message) {
+        UUID recipientUuid = message.getRecipient();
+        User me = session.getConnectedUser();
+
+        // 1. Mise à jour de l'état de lecture
+        if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
+            unreadChannels.add(recipientUuid);
+            notifyObservers();
+        }
+
+        // 2. Traitement des notifications (Mentions @)
+        if (me != null && !message.getSender().getUuid().equals(me.getUuid())) {
+            processPotentialNotification(message, recipientUuid);
+        }
+    }
+
+    private void processPotentialNotification(Message message, UUID recipientUuid) {
+        Channel targetChannel = getChannels().stream()
+                .filter(c -> c.getUuid().equals(recipientUuid))
+                .findFirst()
+                .orElse(null);
+
+        if (targetChannel != null && message.getText().contains("@")) {
+            // On ne notifie que si on n'est pas déjà sur le canal
+            if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
+                for (IChannelListObserver obs : observers) {
+                    obs.onNotificationTriggered(message, targetChannel, true);
+                }
+            }
+        }
+    }
+
+    private void handleChannelSelection(Channel channel) {
+        if (unreadChannels.contains(channel.getUuid())) {
+            unreadChannels.remove(channel.getUuid());
+            notifyObservers();
+        }
+
+        for (IChannelSelectionObserver observer : selectionObservers) {
+            observer.onChannelSelected(channel);
+        }
+    }
+
+    private void handleChannelListChanged() {
+        notifyObservers();
+    }
+
+    private void handlePrivateConversationRequest(User selectedUser) {
+        User me = session.getConnectedUser();
+        if (me == null) return;
+
+        // On cherche un canal privé existant avec seulement cet utilisateur
+        Channel privateChannel = dataManager.getChannels().stream()
+                .filter(c -> c.ismPrivate() && c.getUsers().size() == 1)
+                .filter(c -> {
+                    User guest = c.getUsers().get(0);
+                    boolean amICreator = c.getCreator().getUuid().equals(me.getUuid()) && guest.getUuid().equals(selectedUser.getUuid());
+                    boolean isHeCreator = c.getCreator().getUuid().equals(selectedUser.getUuid()) && guest.getUuid().equals(me.getUuid());
+                    return amICreator || isHeCreator;
+                })
+                .findFirst()
+                .orElse(null);
+
+        if (privateChannel == null) {
+            List<User> guests = new ArrayList<>();
+            guests.add(selectedUser);
+            privateChannel = new Channel(me, "MP - " + selectedUser.getName(), guests);
+            dataManager.sendChannel(privateChannel);
+        }
+
+        selectChannel(privateChannel);
+    }
+
+    // --- Gestion des Observateurs ---
 
     public void addObserver(IChannelListObserver observer) {
         this.observers.add(observer);
@@ -88,134 +213,20 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
         this.selectionObservers.add(observer);
     }
 
-    public void selectChannel(Channel channel) {
-        this.currentSelectedChannel = channel;
-
-        if (unreadChannels.contains(channel.getUuid())) {
-            unreadChannels.remove(channel.getUuid());
-            notifyObservers();
-        }
-
-        for (IChannelSelectionObserver observer : selectionObservers) {
-            observer.onChannelSelected(channel);
-        }
+    // --- Méthodes Ignorées ---
+    @Override public void notifyMessageDeleted(Message deletedMessage) {
+        //ignore
     }
-
-    public boolean hasUnreadMessages(Channel channel) {
-        return unreadChannels.contains(channel.getUuid());
+    @Override public void notifyMessageModified(Message modifiedMessage) {
+        //ignore
     }
-
-    @Override
-    public void notifyMessageAdded(Message addedMessage) {
-        UUID recipientUuid = addedMessage.getRecipient();
-        User me = session.getConnectedUser();
-
-        if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
-            unreadChannels.add(recipientUuid);
-            notifyObservers();
-        }
-
-        if (me != null && !addedMessage.getSender().getUuid().equals(me.getUuid())) {
-
-            Channel targetChannel = getChannels().stream()
-                    .filter(c -> c.getUuid().equals(recipientUuid))
-                    .findFirst()
-                    .orElse(null);
-
-            if (targetChannel != null) {
-                boolean hasAtSymbol = addedMessage.getText().contains("@");
-
-                if (hasAtSymbol && (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid))) {
-
-                    for (IChannelListObserver obs : observers) {
-                        obs.onNotificationTriggered(addedMessage, targetChannel, true);
-                    }
-
-                }
-            }
-        }
+    @Override public void notifyUserAdded(User addedUser) {
+        //ignore
     }
-
-    @Override
-    public void notifyMessageDeleted(Message deletedMessage) {
-        //IGNORE
+    @Override public void notifyUserDeleted(User deletedUser) {
+        //ignore
     }
-
-    @Override
-    public void notifyMessageModified(Message modifiedMessage) {
-        //IGNORE
-    }
-
-    @Override
-    public void notifyUserAdded(User addedUser) {
-        //IGNORE
-    }
-
-    @Override
-    public void notifyUserDeleted(User deletedUser) {
-        //IGNORE
-    }
-
-    @Override
-    public void notifyUserModified(User modifiedUser) {
-        //IGNORE
-    }
-
-    @Override
-    public void notifyChannelAdded(Channel addedChannel) {
-        notifyObservers();
-    }
-
-    @Override
-    public void notifyChannelDeleted(Channel deletedChannel) {
-        notifyObservers();
-    }
-
-    @Override
-    public void notifyChannelModified(Channel modifiedChannel) {
-        notifyObservers();
-    }
-
-    public Set<User> getAllUsers() {
-        return dataManager.getUsers();
-    }
-
-    @Override
-    public void onDeleteRequested(Channel channel) {
-        dataManager.deleteChannel(channel);
-    }
-
-    public boolean isMyChannel(Channel channel) {
-        return channel.getCreator().getUuid().equals(session.getConnectedUser().getUuid());
-    }
-
-    @Override
-    public void onUserSelected(User selectedUser) {
-        User me = session.getConnectedUser();
-
-        Channel privateChannel = null;
-
-        for (Channel c : dataManager.getChannels()) {
-            if (c.ismPrivate() && c.getUsers().size() == 1) {
-                User guest = c.getUsers().get(0);
-
-                boolean amICreator = c.getCreator().getUuid().equals(me.getUuid()) && guest.getUuid().equals(selectedUser.getUuid());
-                boolean isHeCreator = c.getCreator().getUuid().equals(selectedUser.getUuid()) && guest.getUuid().equals(me.getUuid());
-
-                if (amICreator || isHeCreator) {
-                    privateChannel = c;
-                    break;
-                }
-            }
-        }
-
-        if (privateChannel == null) {
-            List<User> guests = new ArrayList<>();
-            guests.add(selectedUser);
-            privateChannel = new Channel(me, "MP - " + selectedUser.getName(), guests);
-
-            dataManager.sendChannel(privateChannel);
-        }
-        selectChannel(privateChannel);
+    @Override public void notifyUserModified(User modifiedUser) {
+        //ignore
     }
 }

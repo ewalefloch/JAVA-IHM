@@ -18,42 +18,75 @@ public class LoginController {
         this.session = session;
     }
 
+    /**
+     * Point d'entrée pour l'inscription.
+     */
     public AuthResult register(String tag, String name, String password) {
-        //SRS-MAP-USR-002
-        if (tag == null || tag.trim().isEmpty()) return new AuthResult(false,"Tag obligatoire");
-        if (name == null || name.trim().isEmpty()) return new AuthResult(false,"Nom obligatoire");
-        if (password == null || password.isEmpty()) return new AuthResult(false,"Mot de passe requis");
-
-        //SRS-MAP-USR-003
-        if (userExists(tag)) {
-            return new AuthResult(false,"Ce Tag est déjà pris.");
+        // Validation des données
+        AuthResult validation = validateRegistrationData(tag, name, password);
+        if (!validation.isSuccess()) {
+            return validation;
         }
 
-        // 3. Création
+        // Traitement de la création
+        return processRegistration(tag, name, password);
+    }
+
+    /**
+     * Point d'entrée pour la connexion.
+     */
+    public AuthResult login(String tag, String password) {
+        // Validation des champs
+        if (isInputEmpty(tag) || isInputEmpty(password)) {
+            return new AuthResult(false, "Champs obligatoires.");
+        }
+
+        // Traitement de l'authentification
+        return processLogin(tag, password);
+    }
+
+    // --- Méthodes de traitement (Logic) ---
+
+    private AuthResult processRegistration(String tag, String name, String password) {
+        if (userExists(tag)) {
+            return new AuthResult(false, "Ce Tag est déjà pris.");
+        }
+
         User newUser = new User(tag, password, name);
         mDataManager.sendUser(newUser);
 
-        return new AuthResult(true,"création compte réussie"); // Succès
+        return new AuthResult(true, "création compte réussie");
     }
 
-    public AuthResult login(String tag, String password) {
-        if (tag == null || tag.trim().isEmpty() || password == null || password.isEmpty()) {
-            return new AuthResult(false,"Champs obligatoires.");
-        }
-
+    private AuthResult processLogin(String tag, String password) {
         User foundUser = findUserByTag(tag);
 
         if (foundUser != null && foundUser.getUserPassword().equals(password)) {
-            //SRS-MAP-USR-004
-            foundUser.setOnline(true);
-            session.connect(foundUser);
-            mDataManager.sendUser(foundUser);
-            return new AuthResult(true,"Connexion réussie");
-        } else {
-            return new AuthResult(false,"Identifiant ou mot de passe incorrect.");
+            completeLoginSession(foundUser);
+            return new AuthResult(true, "Connexion réussie");
         }
+
+        return new AuthResult(false, "Identifiant ou mot de passe incorrect.");
     }
 
+    private void completeLoginSession(User user) {
+        user.setOnline(true);
+        session.connect(user);
+        mDataManager.sendUser(user);
+    }
+
+    // --- Méthodes de validation et utilitaires ---
+
+    private AuthResult validateRegistrationData(String tag, String name, String password) {
+        if (isInputEmpty(tag)) return new AuthResult(false, "Tag obligatoire");
+        if (isInputEmpty(name)) return new AuthResult(false, "Nom obligatoire");
+        if (isInputEmpty(password)) return new AuthResult(false, "Mot de passe requis");
+        return new AuthResult(true, "");
+    }
+
+    private boolean isInputEmpty(String input) {
+        return input == null || input.trim().isEmpty();
+    }
 
     private boolean userExists(String tag) {
         return findUserByTag(tag) != null;
