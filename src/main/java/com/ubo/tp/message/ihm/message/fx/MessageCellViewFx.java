@@ -1,5 +1,6 @@
 package com.ubo.tp.message.ihm.message.fx;
 
+import com.ubo.tp.message.controller.observer.IEasterEggObserver;
 import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

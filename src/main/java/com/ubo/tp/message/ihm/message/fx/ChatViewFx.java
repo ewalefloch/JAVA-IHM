@@ -17,13 +17,12 @@ import com.ubo.tp.message.controller.observer.IMessageListObserver;
 
 import java.util.List;
 
-public class ChatViewFx extends BorderPane implements IMessageListObserver, IEasterEggObserver {
+public class ChatViewFx extends BorderPane implements IMessageListObserver {
 
     private final MessageListController controller;
     private final MessageListViewFx messageListView;
     private TextField inputField;
 
-    // NOUVEAU : Menu déclaré en attribut
     private ContextMenu mentionMenu;
 
     public ChatViewFx(MessageListController controller, MessageListViewFx messageListView) {
@@ -114,15 +113,8 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver, IEas
         }
     }
 
-    @Override
-    public void onEasterEggTriggered(String command) {
-        Platform.runLater(() -> {
-            switch (command) {
-                case "/earthquake" -> EasterEggAnimationFx.playEarthquake(this.messageListView);
-                case "/flip" -> EasterEggAnimationFx.playFlip(this);
-                case "/party" -> EasterEggAnimationFx.playParty(this.messageListView);
-            }
-        });
+    public MessageListViewFx getMessageListView() {
+        return this.messageListView;
     }
 
     @Override

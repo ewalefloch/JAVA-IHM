@@ -1,5 +1,6 @@
 package com.ubo.tp.message.controller;
 
+import com.ubo.tp.message.controller.observer.IEasterEggObserver;
 import com.ubo.tp.message.core.DataManager;
 import com.ubo.tp.message.core.session.ISession;
 import com.ubo.tp.message.datamodel.Channel;
@@ -50,11 +51,11 @@ public class MainPanelControllerFx {
         // Configuration des liens vue-contrôleur restants
         setupViewInteractions(messageListView, channelListController);
 
-        //EasterEgg
         messageListController.addObserver(chatView);
-        messageListController.addEasterEggObserver(chatView);
-        messageListController.addEasterEggObserver(userListView);
-        messageListController.addEasterEggObserver(channelListView);
+    }
+
+    public void addEasterEggObserver(IEasterEggObserver node){
+        this.messageListController.addEasterEggObserver(node);
     }
 
     // --- LOGIQUE DE TRAITEMENT (Handlers / Init) ---

@@ -20,7 +20,6 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
     private final ChannelListController controller;
     private ChannelCellViewFx selectedChannelCell;
     private final Map<UUID, ChannelCellViewFx> cells = new HashMap<>();
-
     public ChannelListViewFx(ChannelListController controller) {
         super("Canaux");
         this.controller = controller;
@@ -88,6 +87,7 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
 
             for (Channel channel : controller.getChannels()) {
                 ChannelCellViewFx cell = cells.get(channel.getUuid());
+
                 if (cell != null) {
                     cell.setUnread(controller.hasUnreadMessages(channel));
                     cell.refresh();
@@ -182,6 +182,19 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
             if (command.equals("/party")) {
                 EasterEggAnimationFx.playParty(this);
             }
+            if (command.equals("/detach")) {
+                javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(javafx.util.Duration.millis(100));
+                delay.setOnFinished(e -> {
+                    for (ChannelCellViewFx cell : cells.values()) {
+                        EasterEggAnimationFx.playDetach(cell);
+                    }
+                });
+                delay.play();
+            }
         });
+    }
+
+    public ArrayList<ChannelCellViewFx> getChannelCell(){
+        return new ArrayList<>(cells.values());
     }
 }

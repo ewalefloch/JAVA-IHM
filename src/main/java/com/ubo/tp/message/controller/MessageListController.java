@@ -100,7 +100,7 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
     public List<Message> getMessages() {
         return dataManager.getMessagesByChannel(currentChannel).stream()
                 .sorted(Comparator.comparingLong(Message::getEmissionDate))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -132,8 +132,7 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
     }
 
     public void setCurrentChannel(Channel channel) {
-        this.currentChannel = channel;
-        this.notifyObservers();
+        handleChannelSelection(channel);
     }
 
     // --- MÉTHODES UTILITAIRES PRIVÉES ---

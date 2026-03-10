@@ -2,9 +2,11 @@ package com.ubo.tp.message.ihm.user.fx;
 
 import com.ubo.tp.message.controller.observer.IEasterEggObserver;
 import com.ubo.tp.message.ihm.message.fx.EasterEggAnimationFx;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -20,13 +22,13 @@ import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListViewFx extends AbstractListViewFx<User> implements IUserListObserver, IEasterEggObserver {
+public class UserListViewFx extends AbstractListViewFx<User> implements IUserListObserver {
 
     private final UserListController controller;
     private UserCellViewFx selectedUserCell;
     private Button manageBtn;
     private Button leaveBtn;
-
+    private final List<UserCellViewFx> activeCells = new ArrayList<>();
     public UserListViewFx(UserListController controller) {
         super("Utilisateurs");
         this.controller = controller;
@@ -67,7 +69,7 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
         });
 
         cell.setOnMouseClicked(e -> selectUser(cell));
-
+        activeCells.add(cell);
         return cell;
     }
 
@@ -108,20 +110,15 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
         });
     }
 
+    public List<? extends Node> getActiveCells() {
+        return this.activeCells;
+    }
+
     @Override
     protected boolean matchSearch(User item, String query) {
         boolean matchName = item.getName() != null && item.getName().toLowerCase().contains(query);
         boolean matchTag = item.getUserTag() != null && item.getUserTag().toLowerCase().contains(query);
         return matchName || matchTag;
-    }
-
-    @Override
-    public void onEasterEggTriggered(String command) {
-        Platform.runLater(() -> {
-            if (command.equals("/party")) {
-                EasterEggAnimationFx.playParty(this);
-            }
-        });
     }
 
     private void showManageChannelDialog() {
