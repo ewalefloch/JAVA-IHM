@@ -1,6 +1,7 @@
 package com.ubo.tp.message.controller;
 
 import com.ubo.tp.message.controller.observer.IChannelSelectionObserver;
+import com.ubo.tp.message.controller.observer.IEasterEggObserver;
 import com.ubo.tp.message.controller.observer.IMessageActionObserver;
 import com.ubo.tp.message.controller.observer.IMessageListObserver;
 import com.ubo.tp.message.core.DataManager;
@@ -23,6 +24,7 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
     private final DataManager dataManager;
     private final ISession session;
     private final List<IMessageListObserver> observers = new ArrayList<>();
+    private final List<IEasterEggObserver> easterEggObservers = new ArrayList<>();
     private Channel currentChannel;
 
     public MessageListController(DataManager dataManager, ISession session) {
@@ -40,7 +42,7 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
 
     @Override
     public void notifyMessageAdded(Message addedMessage) {
-        handleMessageListChange();
+        handleIncomingMessage(addedMessage);
     }
 
     @Override
@@ -71,6 +73,23 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
 
     private void handleMessageDeletion(Message message) {
         dataManager.deleteMessage(message);
+    }
+
+    private void handleIncomingMessage(Message message) {
+        if (currentChannel != null && currentChannel.getUuid().equals(message.getRecipient())) {
+            handleMessageListChange();
+
+            String text = message.getText().trim().toLowerCase();
+            if (text.startsWith("/")) {
+                handleEasterEggCommand(text);
+            }
+        }
+    }
+
+    private void handleEasterEggCommand(String command) {
+        for (IEasterEggObserver obs : easterEggObservers) {
+            obs.onEasterEggTriggered(command);
+        }
     }
 
     // --- LOGIQUE MÉTIER ---
@@ -147,6 +166,14 @@ public class MessageListController implements IDatabaseObserver, IChannelSelecti
 
     public void removeObserver(IMessageListObserver observer) {
         this.observers.remove(observer);
+    }
+
+    public void addEasterEggObserver(IEasterEggObserver observer) {
+        this.easterEggObservers.add(observer);
+    }
+
+    public void removeObserver(IEasterEggObserver observer) {
+        this.easterEggObservers.remove(observer);
     }
 
     protected void notifyObservers() {

@@ -1,5 +1,7 @@
 package com.ubo.tp.message.ihm.channel.fx;
 
+import com.ubo.tp.message.controller.observer.IEasterEggObserver;
+import com.ubo.tp.message.ihm.message.fx.EasterEggAnimationFx;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -13,7 +15,7 @@ import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 
 import java.util.*;
 
-public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IChannelListObserver {
+public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IChannelListObserver, IEasterEggObserver {
 
     private final ChannelListController controller;
     private ChannelCellViewFx selectedChannelCell;
@@ -172,5 +174,14 @@ public class ChannelListViewFx extends AbstractListViewFx<Channel> implements IC
         });
 
         dialog.showAndWait();
+    }
+
+    @Override
+    public void onEasterEggTriggered(String command) {
+        Platform.runLater(() -> {
+            if (command.equals("/party")) {
+                EasterEggAnimationFx.playParty(this);
+            }
+        });
     }
 }

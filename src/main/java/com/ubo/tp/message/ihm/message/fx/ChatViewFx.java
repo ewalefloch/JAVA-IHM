@@ -1,5 +1,6 @@
 package com.ubo.tp.message.ihm.message.fx;
 
+import com.ubo.tp.message.controller.observer.IEasterEggObserver;
 import com.ubo.tp.message.datamodel.User;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
@@ -16,10 +17,10 @@ import com.ubo.tp.message.controller.observer.IMessageListObserver;
 
 import java.util.List;
 
-public class ChatViewFx extends BorderPane implements IMessageListObserver {
+public class ChatViewFx extends BorderPane implements IMessageListObserver, IEasterEggObserver {
 
     private final MessageListController controller;
-    private MessageListViewFx messageListView;
+    private final MessageListViewFx messageListView;
     private TextField inputField;
 
     // NOUVEAU : Menu déclaré en attribut
@@ -29,7 +30,6 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
         this.controller = controller;
         this.messageListView = messageListView;
         this.initComponents();
-        this.controller.addObserver(this);
     }
 
     private void initComponents() {
@@ -112,6 +112,17 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
         if (mentionMenu != null) {
             mentionMenu.hide();
         }
+    }
+
+    @Override
+    public void onEasterEggTriggered(String command) {
+        Platform.runLater(() -> {
+            switch (command) {
+                case "/earthquake" -> EasterEggAnimationFx.playEarthquake(this.messageListView);
+                case "/flip" -> EasterEggAnimationFx.playFlip(this);
+                case "/party" -> EasterEggAnimationFx.playParty(this.messageListView);
+            }
+        });
     }
 
     @Override

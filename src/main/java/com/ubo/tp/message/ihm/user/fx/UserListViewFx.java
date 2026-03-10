@@ -1,5 +1,7 @@
 package com.ubo.tp.message.ihm.user.fx;
 
+import com.ubo.tp.message.controller.observer.IEasterEggObserver;
+import com.ubo.tp.message.ihm.message.fx.EasterEggAnimationFx;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +20,7 @@ import com.ubo.tp.message.ihm.common.fx.AbstractListViewFx;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListViewFx extends AbstractListViewFx<User> implements IUserListObserver {
+public class UserListViewFx extends AbstractListViewFx<User> implements IUserListObserver, IEasterEggObserver {
 
     private final UserListController controller;
     private UserCellViewFx selectedUserCell;
@@ -111,6 +113,15 @@ public class UserListViewFx extends AbstractListViewFx<User> implements IUserLis
         boolean matchName = item.getName() != null && item.getName().toLowerCase().contains(query);
         boolean matchTag = item.getUserTag() != null && item.getUserTag().toLowerCase().contains(query);
         return matchName || matchTag;
+    }
+
+    @Override
+    public void onEasterEggTriggered(String command) {
+        Platform.runLater(() -> {
+            if (command.equals("/party")) {
+                EasterEggAnimationFx.playParty(this);
+            }
+        });
     }
 
     private void showManageChannelDialog() {

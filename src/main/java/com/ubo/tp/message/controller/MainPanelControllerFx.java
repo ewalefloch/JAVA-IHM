@@ -49,6 +49,12 @@ public class MainPanelControllerFx {
 
         // Configuration des liens vue-contrôleur restants
         setupViewInteractions(messageListView, channelListController);
+
+        //EasterEgg
+        messageListController.addObserver(chatView);
+        messageListController.addEasterEggObserver(chatView);
+        messageListController.addEasterEggObserver(userListView);
+        messageListController.addEasterEggObserver(channelListView);
     }
 
     // --- LOGIQUE DE TRAITEMENT (Handlers / Init) ---
