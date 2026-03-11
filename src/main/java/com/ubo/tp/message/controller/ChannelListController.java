@@ -122,7 +122,6 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
     private void handleIncomingMessage(Message message) {
         UUID recipientUuid = message.getRecipient();
         User me = session.getConnectedUser();
-
         // 1. Mise à jour de l'état de lecture
         if (currentSelectedChannel == null || !currentSelectedChannel.getUuid().equals(recipientUuid)) {
             unreadChannels.add(recipientUuid);
@@ -141,7 +140,12 @@ public class ChannelListController implements IDatabaseObserver, IChannelActionO
                 .findFirst()
                 .orElse(null);
 
-        if (targetChannel != null && message.getText().contains("@")) {
+        User me = session.getConnectedUser();
+        if (me == null) return;
+
+        String myMentionString = "@" + me.getUserTag();
+
+        if (targetChannel != null && message.getText().contains(myMentionString)) {
             for (IChannelListObserver obs : observers) {
                 obs.onNotificationTriggered(message, targetChannel, true);
             }

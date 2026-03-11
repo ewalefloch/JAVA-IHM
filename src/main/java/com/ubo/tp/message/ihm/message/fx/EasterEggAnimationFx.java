@@ -6,7 +6,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -14,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 
 public class EasterEggAnimationFx {
@@ -355,9 +355,7 @@ public class EasterEggAnimationFx {
         double[] drops = new double[maxColumns];
 
         // Initialisation : toutes les gouttes commencent en haut (ligne 1)
-        for (int i = 0; i < maxColumns; i++) {
-            drops[i] = 1;
-        }
+        Arrays.fill(drops, 1);
 
         // Les caractères possibles dans notre pluie Matrix
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";

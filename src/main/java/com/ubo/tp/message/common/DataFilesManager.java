@@ -70,7 +70,7 @@ public class DataFilesManager {
 	 * Clé du fichier de propriété pour l'attribut Users
 	 */
 	protected static final String PROPERTY_KEY_CHANNEL_USERS = "Users";
-
+	protected static final String PROPERTY_KEY_CHANNEL_PRIVATE = "IsPrivate";
 	/**
 	 * Séparateur pour les utilisateurs.
 	 */
@@ -140,6 +140,7 @@ public class DataFilesManager {
 		properties.setProperty(PROPERTY_KEY_NAME, channel.getName());
 		properties.setProperty(PROPERTY_KEY_CHANNEL_CREATOR, channel.getCreator().getUuid().toString());
 		properties.setProperty(PROPERTY_KEY_CHANNEL_USERS, this.getUsersAsString(channel.getUsers()));
+		properties.setProperty(PROPERTY_KEY_CHANNEL_PRIVATE, String.valueOf(channel.ismPrivate()));
 
 		PropertiesManager.writeProperties(properties, destFileName);
 	}
@@ -157,16 +158,21 @@ public class DataFilesManager {
 				&& channelFile.exists()) {
 			Properties properties = PropertiesManager.loadProperties(channelFile.getAbsolutePath());
 
-			String uuid = properties.getProperty(PROPERTY_KEY_UUID, UUID.randomUUID().toString());
+			boolean isPrivate = Boolean.parseBoolean(properties.getProperty(PROPERTY_KEY_CHANNEL_PRIVATE, "false"));
+			String uuidStr = properties.getProperty(PROPERTY_KEY_UUID, UUID.randomUUID().toString());
 			String channelName = properties.getProperty(PROPERTY_KEY_NAME, "NoName");
-			String channelCreator = properties.getProperty(PROPERTY_KEY_CHANNEL_CREATOR,
-					Constants.UNKNONWN_USER_UUID.toString());
-			String channelUsers = properties.getProperty(PROPERTY_KEY_CHANNEL_USERS, "");
+			String channelCreatorStr = properties.getProperty(PROPERTY_KEY_CHANNEL_CREATOR, Constants.UNKNONWN_USER_UUID.toString());
+			String channelUsersStr = properties.getProperty(PROPERTY_KEY_CHANNEL_USERS, "");
 
-			User creator = getUserFromUuid(channelCreator, userMap);
-			List<User> allUsers = this.getUsersFromString(channelUsers, userMap);
+			UUID uuid = UUID.fromString(uuidStr);
+			User creator = getUserFromUuid(channelCreatorStr, userMap);
+			List<User> allUsers = this.getUsersFromString(channelUsersStr, userMap);
 
-			channel = new Channel(UUID.fromString(uuid), creator, channelName, allUsers);
+			if (isPrivate) {
+				channel = new Channel(uuid, creator, channelName, allUsers);
+			} else {
+				channel = new Channel(uuid, creator, channelName);
+			}
 		}
 
 		return channel;

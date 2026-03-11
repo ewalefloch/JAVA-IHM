@@ -57,6 +57,13 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
         handleUserListUpdate();
     }
 
+    @Override
+    public void notifyChannelModified(Channel c) {
+        handleUserListUpdate();
+    }
+    @Override public void notifyChannelAdded(Channel c) {
+        handleUserListUpdate();
+    }
     // --- LOGIQUE DE TRAITEMENT ---
 
     private void handleChannelSelection(Channel channel) {
@@ -191,13 +198,7 @@ public class UserListController implements IDatabaseObserver, IChannelSelectionO
     @Override public void notifyMessageModified(Message m) {
         //ignore
     }
-    @Override public void notifyChannelAdded(Channel c) {
-        //ignore
-    }
     @Override public void notifyChannelDeleted(Channel c) {
-        //ignore
-    }
-    @Override public void notifyChannelModified(Channel c) {
         //ignore
     }
 }
