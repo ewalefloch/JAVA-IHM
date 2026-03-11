@@ -40,6 +40,7 @@ public class EasterEggAnimationFx {
         RotateTransition rt = new RotateTransition(Duration.seconds(1), node);
         rt.setByAngle(360);
         rt.setInterpolator(Interpolator.EASE_BOTH);
+        rt.setOnFinished(e -> node.setRotate(0.0));
         rt.play();
     }
 

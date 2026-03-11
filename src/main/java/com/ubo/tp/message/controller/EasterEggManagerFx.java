@@ -50,7 +50,6 @@ public class EasterEggManagerFx implements IEasterEggObserver {
                     EasterEggAnimationFx.playEarthquake(chatView);
                     EasterEggAnimationFx.playFlip(chatView);
                     EasterEggAnimationFx.playDvd(chatView);
-                    EasterEggAnimationFx.playMatrix(mainView);
                     playPartyOnAllLists();
                     playDetachOnAllLists();
                     playZeroGOnAllLists();
