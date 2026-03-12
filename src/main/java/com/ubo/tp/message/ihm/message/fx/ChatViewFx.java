@@ -5,10 +5,7 @@ import com.ubo.tp.message.datamodel.User;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -37,12 +34,35 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
         HBox inputPanel = new HBox(10);
         inputPanel.setPadding(new Insets(10));
         inputPanel.setStyle("-fx-background-color: #f9f9f9; -fx-border-color: lightgray; -fx-border-width: 1 0 0 0;");
+        inputPanel.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         inputField = new TextField();
         inputField.setPromptText("Écrivez votre message...");
         HBox.setHgrow(inputField, Priority.ALWAYS);
 
-        // Appel de la méthode découpée pour configurer l'autocomplétion
+
+        Label charCountLabel = new Label("0/200");
+        charCountLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 11px;");
+
+        javafx.scene.control.TextFormatter<String> formatter = new javafx.scene.control.TextFormatter<>(change -> {
+            if (change.getControlNewText().length() > 200) {
+                return null;
+            }
+            return change;
+        });
+        inputField.setTextFormatter(formatter);
+
+        inputField.textProperty().addListener((obs, oldText, newText) -> {
+            int length = newText.length();
+            charCountLabel.setText(length + "/200");
+
+            if (length >= 190) {
+                charCountLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-font-size: 11px;");
+            } else {
+                charCountLabel.setStyle("-fx-text-fill: gray; -fx-font-size: 11px;");
+            }
+        });
+
         setupMentionAutoComplete();
 
         Button sendButton = new Button("Envoyer");
@@ -52,7 +72,7 @@ public class ChatViewFx extends BorderPane implements IMessageListObserver {
         sendButton.setOnAction(e -> send());
         inputField.setOnAction(e -> send());
 
-        inputPanel.getChildren().addAll(inputField, sendButton);
+        inputPanel.getChildren().addAll(inputField, charCountLabel, sendButton);
         this.setBottom(inputPanel);
     }
 

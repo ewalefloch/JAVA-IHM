@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -39,7 +40,6 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
     @Override
     protected void buildContent() {
         String fontArial = "Arial";
-        Label nameLabel;
         Label iconLabel = new Label("#");
         iconLabel.setFont(Font.font(fontArial, FontWeight.BOLD, 18));
         iconLabel.setTextFill(Color.web("#5865F2"));
@@ -47,26 +47,14 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
         VBox infoPanel = new VBox(3);
         infoPanel.setAlignment(Pos.CENTER_LEFT);
 
-        nameLabel = new Label(item.getName());
+        Label nameLabel = new Label(item.getName());
         nameLabel.setFont(Font.font(fontArial, FontWeight.BOLD, 14));
 
         unreadIndicator = new Circle(4, Color.TRANSPARENT);
 
-
-        Ellipse orbitPath = new Ellipse();
-        orbitPath.setCenterX(0);
-        orbitPath.setCenterY(0);
-
-        orbitPath.radiusXProperty().bind(nameLabel.widthProperty().divide(2).add(14));
-
-        orbitPath.setRadiusY(14);
-
-        StackPane nameBox = new StackPane(nameLabel, unreadIndicator);
-        nameBox.setAlignment(Pos.BASELINE_LEFT);
-
-        orbitAnimation = new PathTransition(Duration.millis(2000), orbitPath, unreadIndicator);
-        orbitAnimation.setCycleCount(Animation.INDEFINITE);
-        orbitAnimation.setInterpolator(Interpolator.LINEAR);
+        HBox nameBox = new HBox(8);
+        nameBox.setAlignment(Pos.CENTER_LEFT);
+        nameBox.getChildren().addAll(nameLabel, unreadIndicator);
 
         infoLabel = new Label();
         infoLabel.setFont(Font.font(fontArial, 11));
@@ -115,9 +103,7 @@ public class ChannelCellViewFx extends AbstractCellViewFx<Channel> {
             unreadIndicator.setFill(unread ? Color.RED : Color.TRANSPARENT);
 
             if (unread) {
-                orbitAnimation.play();
             } else {
-                orbitAnimation.stop();
                 unreadIndicator.setTranslateX(0);
                 unreadIndicator.setTranslateY(0);
             }
